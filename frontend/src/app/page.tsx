@@ -388,8 +388,7 @@ export default function Dashboard() {
             <LocateBar onLocate={(lat, lng) => setFlyToLocation({ lat, lng, ts: Date.now() })} />
 
             <div
-              className="bg-[var(--bg-primary)]/60 backdrop-blur-md border border-[var(--border-primary)] rounded-xl px-6 py-2.5 flex items-center gap-6 shadow-[0_4px_30px_rgba(0,0,0,0.2)] border-b-2 border-b-cyan-900 cursor-pointer"
-              onClick={cycleStyle}
+              className="bg-[var(--bg-primary)]/60 backdrop-blur-md border border-[var(--border-primary)] rounded-xl px-6 py-2.5 flex items-center gap-6 shadow-[0_4px_30px_rgba(0,0,0,0.2)] border-b-2 border-b-cyan-900"
             >
               {/* Coordinates */}
               <div className="flex flex-col items-center min-w-[120px]">
@@ -414,7 +413,7 @@ export default function Dashboard() {
               <div className="w-px h-8 bg-[var(--border-primary)]" />
 
               {/* Style preset (compact) */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center cursor-pointer" onClick={cycleStyle}>
                 <div className="text-[8px] text-[var(--text-muted)] font-mono tracking-[0.2em]">STYLE</div>
                 <div className="text-[11px] text-cyan-400 font-mono font-bold">{activeStyle}</div>
               </div>
