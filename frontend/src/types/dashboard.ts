@@ -1,4 +1,4 @@
-// ─── ShadowBroker Dashboard Data Types ─────────────────────────────────────
+// ─── QuasarBroker Dashboard Data Types ─────────────────────────────────────
 // Canonical type definitions for all data flowing from backend → frontend.
 // Every `any` in the codebase should eventually be replaced with these types.
 
@@ -251,6 +251,141 @@ export interface MilitaryBase {
   lng: number;
 }
 
+// ─── PEMEX INFRASTRUCTURE ──────────────────────────────────────────────────
+
+export interface PemexFacility {
+  name: string;
+  type: string;
+  subtype: string;
+  lat: number;
+  lng: number;
+  state: string;
+  status: string;
+  capacity?: string;
+  notes?: string;
+}
+
+// ─── MEXICO VOLCANOES ──────────────────────────────────────────────────────
+
+export interface MexicoVolcano {
+  name: string;
+  lat: number;
+  lng: number;
+  elevation_m: number;
+  last_eruption: string;
+  alert_level: "green" | "yellow" | "orange" | "red";
+  monitoring: string;
+}
+
+// ─── MEXICO EARTHQUAKES ────────────────────────────────────────────────────
+
+export interface MexicoEarthquake {
+  id: string;
+  mag: number;
+  lat: number;
+  lng: number;
+  depth?: number;
+  place: string;
+  source: string;
+}
+
+// ─── MEXICO WEATHER ALERTS ─────────────────────────────────────────────────
+
+export interface MexicoWeatherAlert {
+  event: string;
+  severity: string;
+  urgency: string;
+  headline: string;
+  description: string;
+  area: string;
+  lat: number;
+  lng: number;
+  source: string;
+}
+
+// ─── MEXICO STATE NEWS ────────────────────────────────────────────────────
+
+export interface MexicoNewsArticle {
+  id: string;
+  title: string;
+  summary: string;
+  source: string;
+  link: string;
+  published: string;
+  risk_score: number;
+  weight: number;
+  state: string;
+}
+
+export interface MexicoStateNews {
+  state_code: string;
+  state_name: string;
+  lat: number;
+  lng: number;
+  article_count: number;
+  max_risk: number;
+  articles: MexicoNewsArticle[];
+}
+
+// ─── MEXICO AIRPORTS ──────────────────────────────────────────────────────
+
+export interface MexicoAirport {
+  name: string;
+  iata: string;
+  type: string;
+  city: string;
+  lat: number;
+  lng: number;
+}
+
+// ─── MEXICO BORDER CROSSINGS ─────────────────────────────────────────────
+
+export interface MexicoBorderCrossing {
+  name: string;
+  type: string;
+  border: string;
+  traffic: string;
+  state: string;
+  lat: number;
+  lng: number;
+}
+
+// ─── MEXICO PORTS ────────────────────────────────────────────────────────
+
+export interface MexicoPort {
+  name: string;
+  type: string;
+  coast: string;
+  state: string;
+  capacity: string;
+  lat: number;
+  lng: number;
+}
+
+// ─── MEXICO PRISONS ──────────────────────────────────────────────────────
+
+export interface MexicoPrison {
+  name: string;
+  type: string;
+  state: string;
+  notes: string;
+  lat: number;
+  lng: number;
+}
+
+// ─── MEXICO DAMS ─────────────────────────────────────────────────────────
+
+export interface MexicoDam {
+  name: string;
+  type: string;
+  state: string;
+  capacity_mw: number;
+  river: string;
+  notes?: string;
+  lat: number;
+  lng: number;
+}
+
 // ─── NEWS / GLOBAL INCIDENTS ────────────────────────────────────────────────
 
 export interface NewsArticle {
@@ -433,6 +568,16 @@ export interface DashboardData {
   datacenters?: DataCenter[];
   military_bases?: MilitaryBase[];
   power_plants?: PowerPlant[];
+  pemex_infrastructure?: PemexFacility[];
+  mexico_volcanoes?: MexicoVolcano[];
+  mexico_earthquakes?: MexicoEarthquake[];
+  mexico_weather_alerts?: MexicoWeatherAlert[];
+  mexico_airports?: MexicoAirport[];
+  mexico_border_crossings?: MexicoBorderCrossing[];
+  mexico_ports?: MexicoPort[];
+  mexico_prisons?: MexicoPrison[];
+  mexico_dams?: MexicoDam[];
+  mexico_news?: MexicoStateNews[];
 }
 
 // ─── COMPONENT PROPS ────────────────────────────────────────────────────────
@@ -463,6 +608,17 @@ export interface ActiveLayers {
   datacenters: boolean;
   military_bases: boolean;
   power_plants: boolean;
+  pemex: boolean;
+  mexico_volcanoes: boolean;
+  mexico_earthquakes: boolean;
+  mexico_weather_alerts: boolean;
+  mexico_incidents: boolean;
+  mexico_airports: boolean;
+  mexico_border_crossings: boolean;
+  mexico_ports: boolean;
+  mexico_prisons: boolean;
+  mexico_dams: boolean;
+  mexico_news: boolean;
 }
 
 export interface SelectedEntity {

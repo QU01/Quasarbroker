@@ -38,6 +38,81 @@ def fetch_earthquakes():
 
 
 # ---------------------------------------------------------------------------
+# Mexico Earthquakes (USGS FDSNWS + SSN for M1.0+ within Mexico bbox)
+# ---------------------------------------------------------------------------
+@with_retry(max_retries=1, base_delay=2)
+def fetch_mexico_earthquakes():
+    """Fetch Mexico-specific earthquakes at lower magnitude threshold (M1.0+)."""
+    quakes = []
+    seen_ids = set()
+    try:
+        # USGS FDSNWS with Mexico bounding box, M1.0+, last 24h
+        url = (
+            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson"
+            "&minlatitude=14.5&maxlatitude=32.7&minlongitude=-118.4&maxlongitude=-86.7"
+            "&minmagnitude=1.0&limit=100&orderby=time"
+        )
+        response = fetch_with_curl(url, timeout=15)
+        if response.status_code == 200:
+            features = response.json().get("features", [])
+            for f in features:
+                qid = f.get("id", "")
+                seen_ids.add(qid)
+                mag = f["properties"]["mag"]
+                lng, lat, depth = f["geometry"]["coordinates"]
+                quakes.append({
+                    "id": qid, "mag": mag,
+                    "lat": lat, "lng": lng,
+                    "depth": depth,
+                    "place": f["properties"]["place"],
+                    "source": "USGS",
+                })
+    except Exception as e:
+        logger.error(f"Error fetching Mexico earthquakes (USGS): {e}")
+
+    # Supplemental: SSN RSS feed for events USGS may miss
+    try:
+        import xml.etree.ElementTree as ET
+        ssn_url = "http://www.ssn.unam.mx/rss/ultimos-sismos.xml"
+        res = fetch_with_curl(ssn_url, timeout=10)
+        if res.status_code == 200:
+            root = ET.fromstring(res.text)
+            for item in root.iter("item"):
+                title = item.findtext("title", "")
+                desc = item.findtext("description", "")
+                # Parse "SISMO Magnitud X.X" from title
+                import re
+                mag_match = re.search(r"[Mm]agnitud\s+([\d.]+)", title)
+                lat_match = re.search(r"Lat(?:itud)?\s*[=:]?\s*([-\d.]+)", desc)
+                lon_match = re.search(r"Lon(?:gitud)?\s*[=:]?\s*([-\d.]+)", desc)
+                if mag_match and lat_match and lon_match:
+                    lat = float(lat_match.group(1))
+                    lng = float(lon_match.group(1))
+                    mag = float(mag_match.group(1))
+                    # Dedup: check if close to an existing USGS event
+                    is_dup = False
+                    for q in quakes:
+                        if abs(q["lat"] - lat) < 0.05 and abs(q["lng"] - lng) < 0.05 and abs(q["mag"] - mag) < 0.3:
+                            is_dup = True
+                            break
+                    if not is_dup:
+                        place = title.replace("SISMO ", "").strip()
+                        quakes.append({
+                            "id": f"ssn-{lat:.2f}-{lng:.2f}-{mag:.1f}",
+                            "mag": mag, "lat": lat, "lng": lng,
+                            "place": place,
+                            "source": "SSN",
+                        })
+    except Exception as e:
+        logger.warning(f"SSN RSS parse failed (non-fatal): {e}")
+
+    with _data_lock:
+        latest_data["mexico_earthquakes"] = quakes
+    if quakes:
+        _mark_fresh("mexico_earthquakes")
+
+
+# ---------------------------------------------------------------------------
 # NASA FIRMS Fires
 # ---------------------------------------------------------------------------
 @with_retry(max_retries=1, base_delay=2)

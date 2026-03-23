@@ -1,4 +1,4 @@
-shadowbroker:
+quasarbroker:
   controllers:
 
     backend:
@@ -13,20 +13,20 @@ shadowbroker:
             runAsGroup: 1001
           image:
             pullPolicy: Always
-            repository: ghcr.io/bigbodycobain/shadowbroker-backend
+            repository: ghcr.io/bigbodycobain/quasarbroker-backend
             tag: latest
           env:
             AIS_API_KEY:
               secretKeyRef:
-                name: shadowbroker-env
+                name: quasarbroker-env
                 key: AIS_API_KEY
             OPENSKY_CLIENT_ID:
               secretKeyRef:
-                name: shadowbroker-env
+                name: quasarbroker-env
                 key: OPENSKY_CLIENT_ID
             OPENSKY_CLIENT_SECRET:
               secretKeyRef:
-                name: shadowbroker-env
+                name: quasarbroker-env
                 key: OPENSKY_CLIENT_SECRET
 
     frontend:
@@ -41,11 +41,11 @@ shadowbroker:
             runAsGroup: 1001
           image:
             pullPolicy: Always
-            repository: ghcr.io/bigbodycobain/shadowbroker-frontend
+            repository: ghcr.io/bigbodycobain/quasarbroker-frontend
             tag: latest
 
           env:
-            BACKEND_URL: 'http://shadowbroker-backend.shadowbroker.svc.cluster.local:8000'
+            BACKEND_URL: 'http://quasarbroker-backend.quasarbroker.svc.cluster.local:8000'
 
   service:
     backend:

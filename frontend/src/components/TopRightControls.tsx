@@ -36,7 +36,7 @@ export default function TopRightControls() {
     const checkForUpdates = async () => {
         setUpdateStatus("checking");
         try {
-            const res = await fetch("https://api.github.com/repos/BigBodyCobain/Shadowbroker/releases/latest");
+            const res = await fetch("https://api.github.com/repos/BigBodyCobain/Quasarbroker/releases/latest");
             if (!res.ok) throw new Error("Failed to fetch");
             const data = await res.json();
 
@@ -138,7 +138,7 @@ export default function TopRightControls() {
                     </button>
 
                     <a
-                        href="https://github.com/BigBodyCobain/Shadowbroker/releases/latest"
+                        href="https://github.com/BigBodyCobain/Quasarbroker/releases/latest"
                         target="_blank"
                         rel="noreferrer"
                         className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-[var(--bg-secondary)]/50 border border-[var(--border-primary)] rounded-md hover:border-[var(--text-muted)] transition-all text-[10px] text-[var(--text-muted)] font-mono tracking-widest"
@@ -179,7 +179,7 @@ export default function TopRightControls() {
                         TRY AGAIN
                     </button>
                     <a
-                        href="https://github.com/BigBodyCobain/Shadowbroker/releases/latest"
+                        href="https://github.com/BigBodyCobain/Quasarbroker/releases/latest"
                         target="_blank"
                         rel="noreferrer"
                         className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-[var(--bg-secondary)]/50 border border-[var(--border-primary)] rounded-md hover:border-[var(--text-muted)] transition-all text-[10px] text-[var(--text-muted)] font-mono tracking-widest"
@@ -196,7 +196,7 @@ export default function TopRightControls() {
         <div className="relative flex items-center gap-2 mb-1 justify-end">
             {/* Discussions link */}
             <a
-                href="https://github.com/BigBodyCobain/Shadowbroker/discussions"
+                href="https://github.com/BigBodyCobain/Quasarbroker/discussions"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[var(--bg-primary)]/50 backdrop-blur-md border border-[var(--border-primary)] rounded-lg hover:border-cyan-500/50 hover:bg-[var(--hover-accent)] transition-all text-[10px] text-[var(--text-secondary)] font-mono cursor-pointer"

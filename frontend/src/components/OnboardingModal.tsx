@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, Key, Shield, Radar, Globe, Satellite, Ship, Radio } from "lucide-react";
+import QuasarLogo from "@/QUASAR.svg";
 
-const STORAGE_KEY = "shadowbroker_onboarding_complete";
+const STORAGE_KEY = "quasarbroker_onboarding_complete";
 
 const API_GUIDES = [
     {
@@ -135,12 +136,12 @@ const OnboardingModal = React.memo(function OnboardingModal({ onClose, onOpenSet
                         {step === 0 && (
                             <div className="space-y-4">
                                 <div className="text-center py-4">
-                                    <div className="text-lg font-bold tracking-[0.3em] text-[var(--text-primary)] font-mono mb-2">
-                                        S H A D O W <span className="text-cyan-400">B R O K E R</span>
+                                    <div className="text-lg font-bold tracking-[0.3em] text-[var(--text-primary)] font-mono mb-2 flex items-center justify-center gap-3">
+                                        <img src={QuasarLogo.src || QuasarLogo} alt="QuasarBroker Logo" className="w-8 h-8 drop-shadow-[0_0_8px_rgba(0,255,255,0.6)]" />
+                                        Quasar<span className="text-cyan-400">Broker</span>
                                     </div>
                                     <p className="text-[11px] text-[var(--text-secondary)] font-mono leading-relaxed max-w-md mx-auto">
-                                        Real-time OSINT dashboard aggregating 12+ live intelligence sources.
-                                        Flights, ships, satellites, earthquakes, conflicts, and more — all on one map.
+                                        Advanced Geopolitical OSINT Intelligence Dashboard with real-time Mexico-focused OSINT capabilities, AI-Powered Agents, and 50+ live intelligence sources all on one interactive map.
                                     </p>
                                 </div>
 
@@ -161,9 +162,9 @@ const OnboardingModal = React.memo(function OnboardingModal({ onClose, onOpenSet
                                     <div className="flex items-start gap-2">
                                         <Globe size={14} className="text-green-500 mt-0.5 flex-shrink-0" />
                                         <div>
-                                            <p className="text-[11px] text-green-400 font-mono font-bold mb-1">8 Sources Work Immediately</p>
+                                            <p className="text-[11px] text-green-400 font-mono font-bold mb-1">50+ Sources & AI Agents Ready</p>
                                             <p className="text-[10px] text-[var(--text-secondary)] font-mono leading-relaxed">
-                                                Military aircraft, satellites, earthquakes, global conflicts, weather radar, radio scanners, news, and market data all work out of the box — no keys needed.
+                                                Mexico OSINT (military bases, PEMEX, volcanoes, weather), LangChain deepagents, state-by-state news, satellites, earthquakes, global conflicts, and more work out of the box — no keys needed for public data.
                                             </p>
                                         </div>
                                     </div>

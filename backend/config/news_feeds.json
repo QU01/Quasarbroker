@@ -94,6 +94,11 @@
       "name": "Japan Times",
       "url": "https://www.japantimes.co.jp/feed/",
       "weight": 3
+    },
+    {
+      "name": "La jornada MX",
+      "url": "https://www.jornada.com.mx/ultimasnoticias",
+      "weight": 5
     }
   ]
 }

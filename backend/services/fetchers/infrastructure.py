@@ -27,7 +27,7 @@ def _geocode_region(region_name: str, country_name: str) -> tuple:
         import urllib.parse
         query = urllib.parse.quote(f"{region_name}, {country_name}")
         url = f"https://nominatim.openstreetmap.org/search?q={query}&format=json&limit=1"
-        response = fetch_with_curl(url, timeout=8, headers={"User-Agent": "ShadowBroker-OSINT/1.0"})
+        response = fetch_with_curl(url, timeout=8, headers={"User-Agent": "QuasarBroker-OSINT/1.0"})
         if response.status_code == 200:
             results = response.json()
             if results:
@@ -216,6 +216,270 @@ def fetch_power_plants():
         latest_data["power_plants"] = plants
     if plants:
         _mark_fresh("power_plants")
+
+
+# ---------------------------------------------------------------------------
+# PEMEX Infrastructure (Mexico oil & gas)
+# ---------------------------------------------------------------------------
+_PEMEX_PATH = Path(__file__).parent.parent.parent / "data" / "pemex_infrastructure.json"
+
+
+def fetch_pemex_infrastructure():
+    """Load static PEMEX infrastructure locations."""
+    items = []
+    try:
+        if not _PEMEX_PATH.exists():
+            logger.warning(f"PEMEX file not found: {_PEMEX_PATH}")
+            return
+        raw = json.loads(_PEMEX_PATH.read_text(encoding="utf-8"))
+        for entry in raw:
+            lat = entry.get("lat")
+            lng = entry.get("lng")
+            if lat is None or lng is None:
+                continue
+            if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+                continue
+            items.append({
+                "name": entry.get("name", "Unknown"),
+                "type": entry.get("type", ""),
+                "state": entry.get("state", ""),
+                "capacity_bpd": entry.get("capacity_bpd"),
+                "lat": lat, "lng": lng,
+            })
+        logger.info(f"PEMEX infrastructure: {len(items)} facilities loaded")
+    except Exception as e:
+        logger.error(f"Error loading PEMEX infrastructure: {e}")
+    with _data_lock:
+        latest_data["pemex_infrastructure"] = items
+    if items:
+        _mark_fresh("pemex_infrastructure")
+
+
+# ---------------------------------------------------------------------------
+# Mexico Volcanoes (CENAPRED monitored)
+# ---------------------------------------------------------------------------
+_VOLCANOES_PATH = Path(__file__).parent.parent.parent / "data" / "mexico_volcanoes.json"
+
+
+def fetch_mexico_volcanoes():
+    """Load static Mexico volcano locations."""
+    items = []
+    try:
+        if not _VOLCANOES_PATH.exists():
+            logger.warning(f"Mexico volcanoes file not found: {_VOLCANOES_PATH}")
+            return
+        raw = json.loads(_VOLCANOES_PATH.read_text(encoding="utf-8"))
+        for entry in raw:
+            lat = entry.get("lat")
+            lng = entry.get("lng")
+            if lat is None or lng is None:
+                continue
+            if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+                continue
+            items.append({
+                "name": entry.get("name", "Unknown"),
+                "elevation_m": entry.get("elevation_m", 0),
+                "last_eruption": entry.get("last_eruption", ""),
+                "alert_level": entry.get("alert_level", "green"),
+                "monitoring": entry.get("monitoring", ""),
+                "lat": lat, "lng": lng,
+            })
+        logger.info(f"Mexico volcanoes: {len(items)} locations loaded")
+    except Exception as e:
+        logger.error(f"Error loading Mexico volcanoes: {e}")
+    with _data_lock:
+        latest_data["mexico_volcanoes"] = items
+    if items:
+        _mark_fresh("mexico_volcanoes")
+
+
+# ---------------------------------------------------------------------------
+# Mexico Airports
+# ---------------------------------------------------------------------------
+_MX_AIRPORTS_PATH = Path(__file__).parent.parent.parent / "data" / "mexico_airports.json"
+
+
+def fetch_mexico_airports():
+    """Load static Mexico airports/airfields."""
+    items = []
+    try:
+        if not _MX_AIRPORTS_PATH.exists():
+            logger.warning(f"Mexico airports file not found: {_MX_AIRPORTS_PATH}")
+            return
+        raw = json.loads(_MX_AIRPORTS_PATH.read_text(encoding="utf-8"))
+        for entry in raw:
+            lat = entry.get("lat")
+            lng = entry.get("lng")
+            if lat is None or lng is None:
+                continue
+            if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+                continue
+            items.append({
+                "name": entry.get("name", "Unknown"),
+                "iata": entry.get("iata", ""),
+                "type": entry.get("type", ""),
+                "city": entry.get("city", ""),
+                "lat": lat, "lng": lng,
+            })
+        logger.info(f"Mexico airports: {len(items)} locations loaded")
+    except Exception as e:
+        logger.error(f"Error loading Mexico airports: {e}")
+    with _data_lock:
+        latest_data["mexico_airports"] = items
+    if items:
+        _mark_fresh("mexico_airports")
+
+
+# ---------------------------------------------------------------------------
+# Mexico Border Crossings
+# ---------------------------------------------------------------------------
+_MX_BORDERS_PATH = Path(__file__).parent.parent.parent / "data" / "mexico_border_crossings.json"
+
+
+def fetch_mexico_border_crossings():
+    """Load static Mexico border crossing locations."""
+    items = []
+    try:
+        if not _MX_BORDERS_PATH.exists():
+            logger.warning(f"Mexico border crossings file not found: {_MX_BORDERS_PATH}")
+            return
+        raw = json.loads(_MX_BORDERS_PATH.read_text(encoding="utf-8"))
+        for entry in raw:
+            lat = entry.get("lat")
+            lng = entry.get("lng")
+            if lat is None or lng is None:
+                continue
+            if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+                continue
+            items.append({
+                "name": entry.get("name", "Unknown"),
+                "type": entry.get("type", ""),
+                "border": entry.get("border", ""),
+                "traffic": entry.get("traffic", ""),
+                "state": entry.get("state", ""),
+                "lat": lat, "lng": lng,
+            })
+        logger.info(f"Mexico border crossings: {len(items)} locations loaded")
+    except Exception as e:
+        logger.error(f"Error loading Mexico border crossings: {e}")
+    with _data_lock:
+        latest_data["mexico_border_crossings"] = items
+    if items:
+        _mark_fresh("mexico_border_crossings")
+
+
+# ---------------------------------------------------------------------------
+# Mexico Ports
+# ---------------------------------------------------------------------------
+_MX_PORTS_PATH = Path(__file__).parent.parent.parent / "data" / "mexico_ports.json"
+
+
+def fetch_mexico_ports():
+    """Load static Mexico port locations."""
+    items = []
+    try:
+        if not _MX_PORTS_PATH.exists():
+            logger.warning(f"Mexico ports file not found: {_MX_PORTS_PATH}")
+            return
+        raw = json.loads(_MX_PORTS_PATH.read_text(encoding="utf-8"))
+        for entry in raw:
+            lat = entry.get("lat")
+            lng = entry.get("lng")
+            if lat is None or lng is None:
+                continue
+            if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+                continue
+            items.append({
+                "name": entry.get("name", "Unknown"),
+                "type": entry.get("type", ""),
+                "coast": entry.get("coast", ""),
+                "state": entry.get("state", ""),
+                "capacity": entry.get("capacity", ""),
+                "lat": lat, "lng": lng,
+            })
+        logger.info(f"Mexico ports: {len(items)} locations loaded")
+    except Exception as e:
+        logger.error(f"Error loading Mexico ports: {e}")
+    with _data_lock:
+        latest_data["mexico_ports"] = items
+    if items:
+        _mark_fresh("mexico_ports")
+
+
+# ---------------------------------------------------------------------------
+# Mexico Prisons (CEFERESO, CERESO)
+# ---------------------------------------------------------------------------
+_MX_PRISONS_PATH = Path(__file__).parent.parent.parent / "data" / "mexico_prisons.json"
+
+
+def fetch_mexico_prisons():
+    """Load static Mexico federal and state prison locations."""
+    items = []
+    try:
+        if not _MX_PRISONS_PATH.exists():
+            logger.warning(f"Mexico prisons file not found: {_MX_PRISONS_PATH}")
+            return
+        raw = json.loads(_MX_PRISONS_PATH.read_text(encoding="utf-8"))
+        for entry in raw:
+            lat = entry.get("lat")
+            lng = entry.get("lng")
+            if lat is None or lng is None:
+                continue
+            if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+                continue
+            items.append({
+                "name": entry.get("name", "Unknown"),
+                "type": entry.get("type", ""),
+                "state": entry.get("state", ""),
+                "notes": entry.get("notes", ""),
+                "lat": lat, "lng": lng,
+            })
+        logger.info(f"Mexico prisons: {len(items)} locations loaded")
+    except Exception as e:
+        logger.error(f"Error loading Mexico prisons: {e}")
+    with _data_lock:
+        latest_data["mexico_prisons"] = items
+    if items:
+        _mark_fresh("mexico_prisons")
+
+
+# ---------------------------------------------------------------------------
+# Mexico Dams & Hydroelectric
+# ---------------------------------------------------------------------------
+_MX_DAMS_PATH = Path(__file__).parent.parent.parent / "data" / "mexico_dams.json"
+
+
+def fetch_mexico_dams():
+    """Load static Mexico dam and hydroelectric plant locations."""
+    items = []
+    try:
+        if not _MX_DAMS_PATH.exists():
+            logger.warning(f"Mexico dams file not found: {_MX_DAMS_PATH}")
+            return
+        raw = json.loads(_MX_DAMS_PATH.read_text(encoding="utf-8"))
+        for entry in raw:
+            lat = entry.get("lat")
+            lng = entry.get("lng")
+            if lat is None or lng is None:
+                continue
+            if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+                continue
+            items.append({
+                "name": entry.get("name", "Unknown"),
+                "type": entry.get("type", ""),
+                "state": entry.get("state", ""),
+                "capacity_mw": entry.get("capacity_mw", 0),
+                "river": entry.get("river", ""),
+                "notes": entry.get("notes", ""),
+                "lat": lat, "lng": lng,
+            })
+        logger.info(f"Mexico dams: {len(items)} locations loaded")
+    except Exception as e:
+        logger.error(f"Error loading Mexico dams: {e}")
+    with _data_lock:
+        latest_data["mexico_dams"] = items
+    if items:
+        _mark_fresh("mexico_dams")
 
 
 # ---------------------------------------------------------------------------

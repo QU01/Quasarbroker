@@ -23,3 +23,9 @@ pystac-client==0.8.6
 pytest==8.3.4
 pytest-asyncio==0.25.0
 httpx==0.28.1
+# AI Agent (OSINT investigation agent)
+deepagents>=0.4.12
+langchain-core>=0.3.0
+langchain-openai>=1.0.0
+langchain-anthropic>=0.3.0
+duckduckgo-search>=7.0.0

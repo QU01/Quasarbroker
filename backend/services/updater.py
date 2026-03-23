@@ -20,7 +20,7 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-GITHUB_RELEASES_URL = "https://api.github.com/repos/BigBodyCobain/Shadowbroker/releases/latest"
+GITHUB_RELEASES_URL = "https://api.github.com/repos/BigBodyCobain/Quasarbroker/releases/latest"
 
 # ---------------------------------------------------------------------------
 # Protected patterns — files/dirs that must NEVER be overwritten during update

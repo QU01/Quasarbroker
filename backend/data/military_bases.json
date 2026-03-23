@@ -867,5 +867,310 @@
     "branch": "army",
     "lat": -23.799,
     "lng": 133.737
+  },
+
+  {
+    "name": "I Zona Militar (CDMX)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 19.437,
+    "lng": -99.145
+  },
+  {
+    "name": "II Zona Militar (Tijuana)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 32.500,
+    "lng": -117.000
+  },
+  {
+    "name": "III Zona Militar (La Paz, BCS)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 24.142,
+    "lng": -110.313
+  },
+  {
+    "name": "IV Zona Militar (Hermosillo)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 29.073,
+    "lng": -110.955
+  },
+  {
+    "name": "V Zona Militar (Chihuahua)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 28.632,
+    "lng": -106.069
+  },
+  {
+    "name": "VII Zona Militar (Monterrey)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 25.686,
+    "lng": -100.316
+  },
+  {
+    "name": "VIII Zona Militar (Tampico)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 22.233,
+    "lng": -97.861
+  },
+  {
+    "name": "IX Zona Militar (Culiacán)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 24.799,
+    "lng": -107.394
+  },
+  {
+    "name": "X Zona Militar (Durango)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 24.020,
+    "lng": -104.653
+  },
+  {
+    "name": "XI Zona Militar (Torreón)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 25.539,
+    "lng": -103.454
+  },
+  {
+    "name": "XII Zona Militar (San Luis Potosí)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 22.150,
+    "lng": -100.983
+  },
+  {
+    "name": "XV Zona Militar (Guadalajara)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 20.659,
+    "lng": -103.349
+  },
+  {
+    "name": "XVIII Zona Militar (Pachuca)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 20.117,
+    "lng": -98.733
+  },
+  {
+    "name": "XX Zona Militar (Colima)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 19.245,
+    "lng": -103.725
+  },
+  {
+    "name": "XXI Zona Militar (Morelia)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 19.702,
+    "lng": -101.192
+  },
+  {
+    "name": "XXIV Zona Militar (Cuernavaca)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 18.922,
+    "lng": -99.234
+  },
+  {
+    "name": "XXV Zona Militar (Puebla)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 19.041,
+    "lng": -98.206
+  },
+  {
+    "name": "XXVI Zona Militar (Veracruz)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 19.173,
+    "lng": -96.134
+  },
+  {
+    "name": "XXVIII Zona Militar (Oaxaca)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 17.073,
+    "lng": -96.726
+  },
+  {
+    "name": "XXIX Zona Militar (Villahermosa)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 17.989,
+    "lng": -92.947
+  },
+  {
+    "name": "XXX Zona Militar (Tuxtla Gutiérrez)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 16.753,
+    "lng": -93.115
+  },
+  {
+    "name": "XXXI Zona Militar (Rancho Nuevo, Chiapas)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 16.737,
+    "lng": -92.637
+  },
+  {
+    "name": "XXXIII Zona Militar (Campeche)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 19.844,
+    "lng": -90.525
+  },
+  {
+    "name": "XXXIV Zona Militar (Chetumal)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 18.500,
+    "lng": -88.296
+  },
+  {
+    "name": "XXXV Zona Militar (Chilpancingo)",
+    "country": "Mexico",
+    "operator": "SEDENA",
+    "branch": "army",
+    "lat": 17.551,
+    "lng": -99.500
+  },
+  {
+    "name": "Base Aérea Militar No. 1 (Santa Lucía)",
+    "country": "Mexico",
+    "operator": "SEDENA Fuerza Aérea",
+    "branch": "air_force",
+    "lat": 19.745,
+    "lng": -99.015
+  },
+  {
+    "name": "Base Aérea Militar No. 5 (Zapopan)",
+    "country": "Mexico",
+    "operator": "SEDENA Fuerza Aérea",
+    "branch": "air_force",
+    "lat": 20.745,
+    "lng": -103.441
+  },
+  {
+    "name": "Base Aérea Militar No. 7 (Pie de la Cuesta)",
+    "country": "Mexico",
+    "operator": "SEDENA Fuerza Aérea",
+    "branch": "air_force",
+    "lat": 16.881,
+    "lng": -99.951
+  },
+  {
+    "name": "Base Aérea Militar No. 11 (Santa Gertrudis, Chihuahua)",
+    "country": "Mexico",
+    "operator": "SEDENA Fuerza Aérea",
+    "branch": "air_force",
+    "lat": 28.703,
+    "lng": -106.089
+  },
+  {
+    "name": "Primera Región Naval (Manzanillo)",
+    "country": "Mexico",
+    "operator": "SEMAR",
+    "branch": "navy",
+    "lat": 19.051,
+    "lng": -104.314
+  },
+  {
+    "name": "Segunda Región Naval (Ensenada)",
+    "country": "Mexico",
+    "operator": "SEMAR",
+    "branch": "navy",
+    "lat": 31.866,
+    "lng": -116.626
+  },
+  {
+    "name": "Tercera Región Naval (Veracruz)",
+    "country": "Mexico",
+    "operator": "SEMAR",
+    "branch": "navy",
+    "lat": 19.200,
+    "lng": -96.133
+  },
+  {
+    "name": "Quinta Región Naval (Ciudad del Carmen)",
+    "country": "Mexico",
+    "operator": "SEMAR",
+    "branch": "navy",
+    "lat": 18.650,
+    "lng": -91.807
+  },
+  {
+    "name": "Séptima Región Naval (Acapulco)",
+    "country": "Mexico",
+    "operator": "SEMAR",
+    "branch": "navy",
+    "lat": 16.863,
+    "lng": -99.882
+  },
+  {
+    "name": "Novena Región Naval (Yukalpetén)",
+    "country": "Mexico",
+    "operator": "SEMAR",
+    "branch": "navy",
+    "lat": 21.277,
+    "lng": -89.700
+  },
+  {
+    "name": "Undécima Región Naval (Chetumal)",
+    "country": "Mexico",
+    "operator": "SEMAR",
+    "branch": "navy",
+    "lat": 18.493,
+    "lng": -88.302
+  },
+  {
+    "name": "Decimotercera Región Naval (Topolobampo)",
+    "country": "Mexico",
+    "operator": "SEMAR",
+    "branch": "navy",
+    "lat": 25.601,
+    "lng": -109.048
+  },
+  {
+    "name": "Decimocuarta Región Naval (Puerto Madero, Chiapas)",
+    "country": "Mexico",
+    "operator": "SEMAR",
+    "branch": "navy",
+    "lat": 14.720,
+    "lng": -92.424
   }
 ]

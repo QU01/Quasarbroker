@@ -1,12 +1,12 @@
 ---
 apiVersion: v2
-name: shadowbroker
+name: quasarbroker
 version: 0.0.1
-description: simple shadowbroker installation
+description: simple quasarbroker installation
 type: application
 
 dependencies:
   - name: app-template
-    alias: shadowbroker
+    alias: quasarbroker
     version: ~4
     repository: https://bjw-s-labs.github.io/helm-charts/

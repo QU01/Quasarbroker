@@ -2,7 +2,7 @@
 // Extracted from MaplibreViewer to reduce component size and enable unit testing.
 // Each function takes data arrays + optional helpers and returns a GeoJSON FeatureCollection or null.
 
-import type { Earthquake, GPSJammingZone, FireHotspot, InternetOutage, DataCenter, MilitaryBase, PowerPlant, GDELTIncident, LiveUAmapIncident, CCTVCamera, KiwiSDR, FrontlineGeoJSON, UAV, Satellite, Ship, ActiveLayers } from "@/types/dashboard";
+import type { Earthquake, GPSJammingZone, FireHotspot, InternetOutage, DataCenter, MilitaryBase, PowerPlant, PemexFacility, MexicoVolcano, MexicoEarthquake, MexicoWeatherAlert, MexicoStateNews, MexicoAirport, MexicoBorderCrossing, MexicoPort, MexicoPrison, MexicoDam, GDELTIncident, LiveUAmapIncident, CCTVCamera, KiwiSDR, FrontlineGeoJSON, UAV, Satellite, Ship, ActiveLayers } from "@/types/dashboard";
 import { classifyAircraft } from "@/utils/aircraftClassification";
 import { MISSION_COLORS, MISSION_ICON_MAP } from "@/components/map/icons/SatelliteIcons";
 
@@ -245,6 +245,301 @@ export function buildMilitaryBasesGeoJSON(bases?: MilitaryBase[]): FC {
                 side: _baseSide(base.country || '', base.operator || ''),
             },
             geometry: { type: 'Point' as const, coordinates: [base.lng, base.lat] }
+        }))
+    };
+}
+
+// ─── PEMEX Infrastructure ──────────────────────────────────────────────────
+
+export function buildPemexGeoJSON(facilities?: PemexFacility[]): FC {
+    if (!facilities?.length) return null;
+    return {
+        type: 'FeatureCollection',
+        features: facilities.map((f, i) => ({
+            type: 'Feature' as const,
+            properties: {
+                id: `pemex-${i}`,
+                type: 'pemex',
+                name: f.name || 'Unknown',
+                facility_type: f.type || '',
+                subtype: f.subtype || '',
+                state: f.state || '',
+                status: f.status || '',
+                capacity: f.capacity || '',
+                notes: f.notes || '',
+            },
+            geometry: { type: 'Point' as const, coordinates: [f.lng, f.lat] }
+        }))
+    };
+}
+
+// ─── Mexico Volcanoes ──────────────────────────────────────────────────────
+
+export function buildVolcanoesGeoJSON(volcanoes?: MexicoVolcano[]): FC {
+    if (!volcanoes?.length) return null;
+    return {
+        type: 'FeatureCollection',
+        features: volcanoes.map((v, i) => {
+            const colorMap: Record<string, string> = { red: '#ff0000', orange: '#ff6600', yellow: '#ffcc00', green: '#00cc44' };
+            return {
+                type: 'Feature' as const,
+                properties: {
+                    id: `volcano-${i}`,
+                    type: 'volcano',
+                    name: v.name || 'Unknown',
+                    elevation_m: v.elevation_m || 0,
+                    last_eruption: v.last_eruption || '',
+                    alert_level: v.alert_level || 'green',
+                    monitoring: v.monitoring || '',
+                    color: colorMap[v.alert_level] || '#00cc44',
+                },
+                geometry: { type: 'Point' as const, coordinates: [v.lng, v.lat] }
+            };
+        })
+    };
+}
+
+// ─── Mexico Earthquakes ────────────────────────────────────────────────────
+
+export function buildMexicoEarthquakesGeoJSON(quakes?: MexicoEarthquake[]): FC {
+    if (!quakes?.length) return null;
+    return {
+        type: 'FeatureCollection',
+        features: quakes.map((eq, i) => {
+            if (eq.lat == null || eq.lng == null) return null;
+            return {
+                type: 'Feature' as const,
+                properties: {
+                    id: eq.id || `mxeq-${i}`,
+                    type: 'mexico_earthquake',
+                    name: `[M${eq.mag}] ${eq.place || 'Mexico'}`,
+                    mag: eq.mag,
+                    depth: eq.depth || 0,
+                    source: eq.source || '',
+                },
+                geometry: { type: 'Point' as const, coordinates: [eq.lng, eq.lat] }
+            };
+        }).filter(Boolean) as GeoJSON.Feature[]
+    };
+}
+
+// ─── Mexico Weather Alerts ─────────────────────────────────────────────────
+
+export function buildMexicoWeatherAlertsGeoJSON(alerts?: MexicoWeatherAlert[]): FC {
+    if (!alerts?.length) return null;
+    return {
+        type: 'FeatureCollection',
+        features: alerts.map((a, i) => {
+            if (a.lat == null || a.lng == null) return null;
+            const severityColor: Record<string, string> = {
+                'Severe': '#ef4444', 'Extreme': '#dc2626',
+                'Moderate': '#f59e0b', 'Minor': '#3b82f6', 'Unknown': '#6b7280',
+            };
+            return {
+                type: 'Feature' as const,
+                properties: {
+                    id: `mxwx-${i}`,
+                    type: 'mexico_weather_alert',
+                    name: a.headline || a.event || 'Alert',
+                    event: a.event || '',
+                    severity: a.severity || 'Unknown',
+                    area: a.area || '',
+                    description: a.description || '',
+                    color: severityColor[a.severity] || '#6b7280',
+                },
+                geometry: { type: 'Point' as const, coordinates: [a.lng, a.lat] }
+            };
+        }).filter(Boolean) as GeoJSON.Feature[]
+    };
+}
+
+// ─── Mexico State News ────────────────────────────────────────────────────
+
+export function buildMexicoNewsGeoJSON(stateNews?: MexicoStateNews[]): FC {
+    if (!stateNews?.length) return null;
+    const withArticles = stateNews.filter(s => s.articles?.length > 0);
+    if (!withArticles.length) return null;
+    return {
+        type: 'FeatureCollection',
+        features: withArticles.map(s => {
+            // Color based on max risk score
+            const riskColor = s.max_risk >= 7 ? '#ef4444' :  // red
+                              s.max_risk >= 5 ? '#f97316' :  // orange
+                              s.max_risk >= 3 ? '#eab308' :  // yellow
+                              '#22c55e';                      // green
+            // Top article headline
+            const topTitle = s.articles[0]?.title || '';
+            const topSource = s.articles[0]?.source || '';
+            return {
+                type: 'Feature' as const,
+                properties: {
+                    id: `mxnews-${s.state_code}`,
+                    type: 'mexico_news',
+                    state_code: s.state_code,
+                    state_name: s.state_name,
+                    article_count: s.article_count,
+                    max_risk: s.max_risk,
+                    top_title: topTitle.length > 60 ? topTitle.slice(0, 57) + '...' : topTitle,
+                    top_source: topSource,
+                    articles_json: JSON.stringify(s.articles.slice(0, 3)),
+                    color: riskColor,
+                },
+                geometry: { type: 'Point' as const, coordinates: [s.lng, s.lat] }
+            };
+        })
+    };
+}
+
+// ─── GDELT Mexico Filter ──────────────────────────────────────────────────
+
+// Mexico bounding box: lat 14.5-32.7, lng -118.4 to -86.7
+const MX_BBOX = { minLat: 14.5, maxLat: 32.7, minLng: -118.4, maxLng: -86.7 };
+
+export function buildMexicoIncidentsGeoJSON(gdelt?: GDELTIncident[]): FC {
+    if (!gdelt?.length) return null;
+    const filtered = gdelt.filter(g => {
+        if (!g.geometry?.coordinates) return false;
+        const [lng, lat] = g.geometry.coordinates;
+        return lat >= MX_BBOX.minLat && lat <= MX_BBOX.maxLat &&
+               lng >= MX_BBOX.minLng && lng <= MX_BBOX.maxLng;
+    });
+    if (!filtered.length) return null;
+    return {
+        type: 'FeatureCollection',
+        features: filtered.map((g) => ({
+            type: 'Feature' as const,
+            properties: {
+                id: g.properties?.name || String(g.geometry.coordinates),
+                type: 'mexico_incident',
+                title: g.properties?.name || '',
+                count: g.properties?.count || 0,
+            },
+            geometry: g.geometry
+        }))
+    };
+}
+
+// ─── Mexico Airports ──────────────────────────────────────────────────────
+
+export function buildMexicoAirportsGeoJSON(airports?: MexicoAirport[]): FC {
+    if (!airports?.length) return null;
+    return {
+        type: 'FeatureCollection',
+        features: airports.map((a) => ({
+            type: 'Feature' as const,
+            properties: {
+                id: `mxap-${a.iata || a.name}`,
+                type: 'mexico_airport',
+                name: `${a.name} (${a.iata})`,
+                iata: a.iata,
+                airport_type: a.type,
+                city: a.city,
+                color: a.type === 'international' ? '#38bdf8' : '#7dd3fc',
+            },
+            geometry: { type: 'Point' as const, coordinates: [a.lng, a.lat] }
+        }))
+    };
+}
+
+// ─── Mexico Border Crossings ──────────────────────────────────────────────
+
+export function buildMexicoBorderCrossingsGeoJSON(crossings?: MexicoBorderCrossing[]): FC {
+    if (!crossings?.length) return null;
+    const trafficColor: Record<string, string> = {
+        'high': '#ef4444', 'medium': '#f59e0b', 'low': '#22c55e',
+    };
+    return {
+        type: 'FeatureCollection',
+        features: crossings.map((c) => ({
+            type: 'Feature' as const,
+            properties: {
+                id: `mxbr-${c.name}`,
+                type: 'mexico_border_crossing',
+                name: c.name,
+                crossing_type: c.type,
+                border: c.border,
+                traffic: c.traffic,
+                state: c.state,
+                color: trafficColor[c.traffic] || '#6b7280',
+            },
+            geometry: { type: 'Point' as const, coordinates: [c.lng, c.lat] }
+        }))
+    };
+}
+
+// ─── Mexico Ports ─────────────────────────────────────────────────────────
+
+export function buildMexicoPortsGeoJSON(ports?: MexicoPort[]): FC {
+    if (!ports?.length) return null;
+    const portColor: Record<string, string> = {
+        'commercial': '#3b82f6', 'oil': '#f59e0b', 'cruise': '#a855f7',
+        'naval': '#ef4444', 'ferry': '#06b6d4', 'fishing': '#22c55e',
+    };
+    return {
+        type: 'FeatureCollection',
+        features: ports.map((p) => ({
+            type: 'Feature' as const,
+            properties: {
+                id: `mxpt-${p.name}`,
+                type: 'mexico_port',
+                name: p.name,
+                port_type: p.type,
+                coast: p.coast,
+                state: p.state,
+                capacity: p.capacity,
+                color: portColor[p.type] || '#3b82f6',
+            },
+            geometry: { type: 'Point' as const, coordinates: [p.lng, p.lat] }
+        }))
+    };
+}
+
+// ─── Mexico Prisons ───────────────────────────────────────────────────────
+
+export function buildMexicoPrisonsGeoJSON(prisons?: MexicoPrison[]): FC {
+    if (!prisons?.length) return null;
+    const prisonColor: Record<string, string> = {
+        'federal_max': '#dc2626', 'federal_med': '#ef4444', 'federal_fem': '#f472b6',
+        'state_max': '#ea580c', 'state': '#f97316', 'historical': '#6b7280',
+    };
+    return {
+        type: 'FeatureCollection',
+        features: prisons.map((p) => ({
+            type: 'Feature' as const,
+            properties: {
+                id: `mxpr-${p.name}`,
+                type: 'mexico_prison',
+                name: p.name,
+                prison_type: p.type,
+                state: p.state,
+                notes: p.notes,
+                color: prisonColor[p.type] || '#f97316',
+            },
+            geometry: { type: 'Point' as const, coordinates: [p.lng, p.lat] }
+        }))
+    };
+}
+
+// ─── Mexico Dams ──────────────────────────────────────────────────────────
+
+export function buildMexicoDamsGeoJSON(dams?: MexicoDam[]): FC {
+    if (!dams?.length) return null;
+    return {
+        type: 'FeatureCollection',
+        features: dams.map((d) => ({
+            type: 'Feature' as const,
+            properties: {
+                id: `mxdm-${d.name}`,
+                type: 'mexico_dam',
+                name: d.name,
+                dam_type: d.type,
+                state: d.state,
+                capacity_mw: d.capacity_mw,
+                river: d.river,
+                notes: d.notes || '',
+                color: d.type === 'hydroelectric' ? '#06b6d4' : d.type === 'irrigation' ? '#22c55e' : '#3b82f6',
+            },
+            geometry: { type: 'Point' as const, coordinates: [d.lng, d.lat] }
         }))
     };
 }

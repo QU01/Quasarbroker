@@ -19,6 +19,10 @@ _SECRET_VARS = [
     "LTA_ACCOUNT_KEY",
     "CORS_ORIGINS",
     "ADMIN_KEY",
+    "HIBP_API_KEY",
+    "ANTHROPIC_API_KEY",
+    "OPENAI_API_KEY",
+    "OPENROUTER_API_KEY",
 ]
 
 for _var in _SECRET_VARS:
@@ -307,6 +311,16 @@ async def live_data_slow(request: Request,
         "datacenters": _f(d.get("datacenters", [])),
         "military_bases": _f(d.get("military_bases", [])),
         "power_plants": _f(d.get("power_plants", [])),
+        "pemex_infrastructure": _f(d.get("pemex_infrastructure", [])),
+        "mexico_volcanoes": _f(d.get("mexico_volcanoes", [])),
+        "mexico_earthquakes": _f(d.get("mexico_earthquakes", [])),
+        "mexico_weather_alerts": _f(d.get("mexico_weather_alerts", [])),
+        "mexico_airports": _f(d.get("mexico_airports", [])),
+        "mexico_border_crossings": _f(d.get("mexico_border_crossings", [])),
+        "mexico_ports": _f(d.get("mexico_ports", [])),
+        "mexico_prisons": _f(d.get("mexico_prisons", [])),
+        "mexico_dams": _f(d.get("mexico_dams", [])),
+        "mexico_news": d.get("mexico_news", []),
         "freshness": dict(source_timestamps),
     }
     bbox_tag = f"{s},{w},{n},{e}" if has_bbox else "full"
@@ -423,6 +437,123 @@ def api_region_dossier(
 ):
     """Sync def so FastAPI runs it in a threadpool — prevents blocking the event loop."""
     return get_region_dossier(lat, lng)
+
+from services.person_lookup import lookup_person
+
+class PersonLookupRequest(BaseModel):
+    name: str = ""
+    email: str = ""
+    username: str = ""
+    phone: str = ""
+    domain: str = ""
+
+@app.post("/api/person-lookup")
+@limiter.limit("10/minute")
+def api_person_lookup(request: Request, body: PersonLookupRequest):
+    """OSINT person lookup — aggregates public data from multiple sources.
+    Sync def so FastAPI runs it in a threadpool — prevents blocking the event loop."""
+    if not any([body.name.strip(), body.email.strip(), body.username.strip(), body.domain.strip()]):
+        return Response(
+            content='{"error":"At least one of name, email, username, or domain is required"}',
+            status_code=400,
+            media_type="application/json",
+        )
+    return lookup_person(
+        name=body.name,
+        email=body.email,
+        username=body.username,
+        phone=body.phone,
+        domain=body.domain,
+    )
+
+# ---------------------------------------------------------------------------
+# OSINT Investigation Agent (SSE streaming)
+# ---------------------------------------------------------------------------
+from fastapi.responses import StreamingResponse
+
+class AgentChatRequest(BaseModel):
+    session_id: str = ""
+    message: str
+
+class AgentConfigRequest(BaseModel):
+    api_key: str = ""
+    model: str = ""
+    provider: str = ""   # "openrouter" | "anthropic" | "openai"
+
+@app.get("/api/agent/status")
+def agent_status():
+    """Check if the OSINT agent is available and return current config."""
+    from services.osint_agent import get_agent_config
+    return get_agent_config()
+
+@app.post("/api/agent/config")
+def agent_config(body: AgentConfigRequest):
+    """Set LLM API key and model from the frontend."""
+    from services.osint_agent import set_runtime_config
+    return set_runtime_config(
+        api_key=body.api_key,
+        model=body.model,
+        provider=body.provider,
+    )
+
+@app.post("/api/agent/chat")
+@limiter.limit("30/minute")
+async def agent_chat(request: Request, body: AgentChatRequest):
+    """Conversational OSINT agent — streams response as Server-Sent Events."""
+    from services.osint_agent import is_agent_available, get_or_create_session
+
+    if not is_agent_available():
+        return Response(
+            content='{"error":"No API key configured. Enter your OpenRouter key in the Agent panel."}',
+            status_code=503,
+            media_type="application/json",
+        )
+
+    if not body.message.strip():
+        return Response(
+            content='{"error":"Message cannot be empty"}',
+            status_code=400,
+            media_type="application/json",
+        )
+
+    if len(body.message) > 4000:
+        return Response(
+            content='{"error":"Message too long (max 4000 chars)"}',
+            status_code=400,
+            media_type="application/json",
+        )
+
+    try:
+        session = get_or_create_session(body.session_id)
+    except ValueError as e:
+        return Response(
+            content=f'{{"error":"{str(e)}"}}',
+            status_code=503,
+            media_type="application/json",
+        )
+
+    async def event_stream():
+        yield f"event: session\ndata: {{\"session_id\": \"{session.session_id}\"}}\n\n"
+        async for event in session.stream_response(body.message):
+            yield event
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+@app.post("/api/agent/clear")
+def agent_clear(request: Request, body: dict):
+    """Clear an agent session."""
+    from services.osint_agent import clear_session
+    session_id = body.get("session_id", "")
+    cleared = clear_session(session_id)
+    return {"cleared": cleared}
 
 from services.sentinel_search import search_sentinel2_scene
 

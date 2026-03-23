@@ -51,6 +51,8 @@ import { spreadAlertItems } from "@/utils/alertSpread";
 import {
     buildEarthquakesGeoJSON, buildJammingGeoJSON, buildCctvGeoJSON, buildKiwisdrGeoJSON,
     buildFirmsGeoJSON, buildInternetOutagesGeoJSON, buildDataCentersGeoJSON, buildPowerPlantsGeoJSON, buildMilitaryBasesGeoJSON,
+    buildPemexGeoJSON, buildVolcanoesGeoJSON, buildMexicoEarthquakesGeoJSON, buildMexicoWeatherAlertsGeoJSON, buildMexicoIncidentsGeoJSON, buildMexicoNewsGeoJSON,
+    buildMexicoAirportsGeoJSON, buildMexicoBorderCrossingsGeoJSON, buildMexicoPortsGeoJSON, buildMexicoPrisonsGeoJSON, buildMexicoDamsGeoJSON,
     buildGdeltGeoJSON, buildLiveuaGeoJSON, buildFrontlineGeoJSON,
     buildFlightLayerGeoJSON, buildUavGeoJSON,
     buildSatellitesGeoJSON, buildShipsGeoJSON, buildCarriersGeoJSON,
@@ -229,6 +231,50 @@ const MaplibreViewer = ({ data, activeLayers, onEntityClick, flyToLocation, sele
     const militaryBasesGeoJSON = useMemo(() =>
         activeLayers.military_bases ? buildMilitaryBasesGeoJSON(data?.military_bases) : null,
         [activeLayers.military_bases, data?.military_bases]);
+
+    const pemexGeoJSON = useMemo(() =>
+        activeLayers.pemex ? buildPemexGeoJSON(data?.pemex_infrastructure) : null,
+        [activeLayers.pemex, data?.pemex_infrastructure]);
+
+    const volcanoesGeoJSON = useMemo(() =>
+        activeLayers.mexico_volcanoes ? buildVolcanoesGeoJSON(data?.mexico_volcanoes) : null,
+        [activeLayers.mexico_volcanoes, data?.mexico_volcanoes]);
+
+    const mexicoEarthquakesGeoJSON = useMemo(() =>
+        activeLayers.mexico_earthquakes ? buildMexicoEarthquakesGeoJSON(data?.mexico_earthquakes) : null,
+        [activeLayers.mexico_earthquakes, data?.mexico_earthquakes]);
+
+    const mexicoWeatherAlertsGeoJSON = useMemo(() =>
+        activeLayers.mexico_weather_alerts ? buildMexicoWeatherAlertsGeoJSON(data?.mexico_weather_alerts) : null,
+        [activeLayers.mexico_weather_alerts, data?.mexico_weather_alerts]);
+
+    const mexicoIncidentsGeoJSON = useMemo(() =>
+        activeLayers.mexico_incidents ? buildMexicoIncidentsGeoJSON(data?.gdelt) : null,
+        [activeLayers.mexico_incidents, data?.gdelt]);
+
+    const mexicoNewsGeoJSON = useMemo(() =>
+        activeLayers.mexico_news ? buildMexicoNewsGeoJSON(data?.mexico_news) : null,
+        [activeLayers.mexico_news, data?.mexico_news]);
+
+    const mexicoAirportsGeoJSON = useMemo(() =>
+        activeLayers.mexico_airports ? buildMexicoAirportsGeoJSON(data?.mexico_airports) : null,
+        [activeLayers.mexico_airports, data?.mexico_airports]);
+
+    const mexicoBorderCrossingsGeoJSON = useMemo(() =>
+        activeLayers.mexico_border_crossings ? buildMexicoBorderCrossingsGeoJSON(data?.mexico_border_crossings) : null,
+        [activeLayers.mexico_border_crossings, data?.mexico_border_crossings]);
+
+    const mexicoPortsGeoJSON = useMemo(() =>
+        activeLayers.mexico_ports ? buildMexicoPortsGeoJSON(data?.mexico_ports) : null,
+        [activeLayers.mexico_ports, data?.mexico_ports]);
+
+    const mexicoPrisonsGeoJSON = useMemo(() =>
+        activeLayers.mexico_prisons ? buildMexicoPrisonsGeoJSON(data?.mexico_prisons) : null,
+        [activeLayers.mexico_prisons, data?.mexico_prisons]);
+
+    const mexicoDamsGeoJSON = useMemo(() =>
+        activeLayers.mexico_dams ? buildMexicoDamsGeoJSON(data?.mexico_dams) : null,
+        [activeLayers.mexico_dams, data?.mexico_dams]);
 
     // Load Images into the Map Style once loaded
     const onMapLoad = useCallback((e: any) => {
@@ -600,6 +646,17 @@ const MaplibreViewer = ({ data, activeLayers, onEntityClick, flyToLocation, sele
         dataCentersGeoJSON && 'datacenters-layer',
         powerPlantsGeoJSON && 'power-plants-layer',
         militaryBasesGeoJSON && 'military-bases-layer',
+        pemexGeoJSON && 'pemex-layer',
+        volcanoesGeoJSON && 'volcanoes-layer',
+        mexicoEarthquakesGeoJSON && 'mexico-earthquakes-layer',
+        mexicoWeatherAlertsGeoJSON && 'mexico-weather-alerts-layer',
+        mexicoIncidentsGeoJSON && 'mexico-incidents-layer',
+        mexicoNewsGeoJSON && 'mexico-news-layer',
+        mexicoAirportsGeoJSON && 'mexico-airports-layer',
+        mexicoBorderCrossingsGeoJSON && 'mexico-border-crossings-layer',
+        mexicoPortsGeoJSON && 'mexico-ports-layer',
+        mexicoPrisonsGeoJSON && 'mexico-prisons-layer',
+        mexicoDamsGeoJSON && 'mexico-dams-layer',
         firmsGeoJSON && 'firms-viirs-layer'
     ].filter(Boolean) as string[];
 
@@ -1564,6 +1621,478 @@ const MaplibreViewer = ({ data, activeLayers, onEntityClick, flyToLocation, sele
                     </Source>
                 )}
 
+                {/* PEMEX Infrastructure */}
+                {pemexGeoJSON && (
+                    <Source id="pemex" type="geojson" data={pemexGeoJSON as any} cluster={true} clusterRadius={30} clusterMaxZoom={8}>
+                        <Layer
+                            id="pemex-clusters"
+                            type="circle"
+                            filter={['has', 'point_count']}
+                            paint={{
+                                'circle-color': '#f59e0b',
+                                'circle-radius': ['step', ['get', 'point_count'], 12, 5, 16, 10, 20],
+                                'circle-opacity': 0.85,
+                                'circle-stroke-width': 2,
+                                'circle-stroke-color': '#fbbf24',
+                            }}
+                        />
+                        <Layer
+                            id="pemex-cluster-count"
+                            type="symbol"
+                            filter={['has', 'point_count']}
+                            layout={{
+                                'text-field': '{point_count_abbreviated}',
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 11,
+                            }}
+                            paint={{ 'text-color': '#000' }}
+                        />
+                        <Layer
+                            id="pemex-layer"
+                            type="circle"
+                            filter={['!', ['has', 'point_count']]}
+                            paint={{
+                                'circle-color': '#f59e0b',
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 4, 6, 7, 10, 10],
+                                'circle-opacity': 0.85,
+                                'circle-stroke-width': 2,
+                                'circle-stroke-color': '#fbbf24',
+                            }}
+                        />
+                        <Layer
+                            id="pemex-label"
+                            type="symbol"
+                            filter={['!', ['has', 'point_count']]}
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 6, ['get', 'name']],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 10,
+                                'text-offset': [0, 1.4],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#fbbf24',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico Volcanoes */}
+                {volcanoesGeoJSON && (
+                    <Source id="volcanoes" type="geojson" data={volcanoesGeoJSON as any}>
+                        <Layer
+                            id="volcanoes-layer"
+                            type="circle"
+                            paint={{
+                                'circle-color': ['get', 'color'],
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 5, 6, 8, 10, 12],
+                                'circle-opacity': 0.9,
+                                'circle-stroke-width': 2,
+                                'circle-stroke-color': '#fff',
+                            }}
+                        />
+                        <Layer
+                            id="volcanoes-label"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 5, ['concat', ['get', 'name'], '\n', ['get', 'alert_level']]],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 10,
+                                'text-offset': [0, 1.6],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#ff9900',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico Earthquakes */}
+                {mexicoEarthquakesGeoJSON && (
+                    <Source id="mexico-earthquakes" type="geojson" data={mexicoEarthquakesGeoJSON as any}>
+                        <Layer
+                            id="mexico-earthquakes-layer"
+                            type="circle"
+                            paint={{
+                                'circle-color': '#ef4444',
+                                'circle-radius': ['interpolate', ['linear'], ['get', 'mag'], 1, 4, 3, 7, 5, 12, 7, 18],
+                                'circle-opacity': 0.7,
+                                'circle-stroke-width': 1.5,
+                                'circle-stroke-color': '#fca5a5',
+                            }}
+                        />
+                        <Layer
+                            id="mexico-earthquakes-label"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 5, ['get', 'name']],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 10,
+                                'text-offset': [0, 1.4],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#fca5a5',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico Weather Alerts */}
+                {mexicoWeatherAlertsGeoJSON && (
+                    <Source id="mexico-weather-alerts" type="geojson" data={mexicoWeatherAlertsGeoJSON as any}>
+                        <Layer
+                            id="mexico-weather-alerts-layer"
+                            type="circle"
+                            paint={{
+                                'circle-color': ['get', 'color'],
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 6, 6, 10, 10, 14],
+                                'circle-opacity': 0.8,
+                                'circle-stroke-width': 2,
+                                'circle-stroke-color': '#fff',
+                            }}
+                        />
+                        <Layer
+                            id="mexico-weather-alerts-label"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 5, ['get', 'name']],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 10,
+                                'text-offset': [0, 1.6],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#fbbf24',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico GDELT Incidents Filter */}
+                {mexicoIncidentsGeoJSON && (
+                    <Source id="mexico-incidents" type="geojson" data={mexicoIncidentsGeoJSON as any} cluster={true} clusterRadius={40} clusterMaxZoom={8}>
+                        <Layer
+                            id="mexico-incidents-clusters"
+                            type="circle"
+                            filter={['has', 'point_count']}
+                            paint={{
+                                'circle-color': '#f97316',
+                                'circle-radius': ['step', ['get', 'point_count'], 14, 5, 18, 10, 22],
+                                'circle-opacity': 0.8,
+                                'circle-stroke-width': 2,
+                                'circle-stroke-color': '#fdba74',
+                            }}
+                        />
+                        <Layer
+                            id="mexico-incidents-cluster-count"
+                            type="symbol"
+                            filter={['has', 'point_count']}
+                            layout={{
+                                'text-field': '{point_count_abbreviated}',
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 11,
+                            }}
+                            paint={{ 'text-color': '#000' }}
+                        />
+                        <Layer
+                            id="mexico-incidents-layer"
+                            type="circle"
+                            filter={['!', ['has', 'point_count']]}
+                            paint={{
+                                'circle-color': '#f97316',
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 4, 6, 7, 10, 10],
+                                'circle-opacity': 0.75,
+                                'circle-stroke-width': 1.5,
+                                'circle-stroke-color': '#fdba74',
+                            }}
+                        />
+                        <Layer
+                            id="mexico-incidents-label"
+                            type="symbol"
+                            filter={['!', ['has', 'point_count']]}
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 6, ['get', 'title']],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 10,
+                                'text-offset': [0, 1.4],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#fdba74',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico Airports */}
+                {mexicoAirportsGeoJSON && (
+                    <Source id="mexico-airports" type="geojson" data={mexicoAirportsGeoJSON as any}>
+                        <Layer
+                            id="mexico-airports-layer"
+                            type="circle"
+                            paint={{
+                                'circle-color': ['get', 'color'],
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 3, 6, 6, 10, 9],
+                                'circle-opacity': 0.85,
+                                'circle-stroke-width': 1.5,
+                                'circle-stroke-color': '#e0f2fe',
+                            }}
+                        />
+                        <Layer
+                            id="mexico-airports-label"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 6, ['get', 'iata'], 8, ['get', 'name']],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 10,
+                                'text-offset': [0, 1.2],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#7dd3fc',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico Border Crossings */}
+                {mexicoBorderCrossingsGeoJSON && (
+                    <Source id="mexico-border-crossings" type="geojson" data={mexicoBorderCrossingsGeoJSON as any}>
+                        <Layer
+                            id="mexico-border-crossings-layer"
+                            type="circle"
+                            paint={{
+                                'circle-color': ['get', 'color'],
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 4, 6, 7, 10, 10],
+                                'circle-opacity': 0.85,
+                                'circle-stroke-width': 2,
+                                'circle-stroke-color': '#fef3c7',
+                            }}
+                        />
+                        <Layer
+                            id="mexico-border-crossings-label"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 6, ['get', 'name']],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 10,
+                                'text-offset': [0, 1.4],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#fde68a',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico Ports */}
+                {mexicoPortsGeoJSON && (
+                    <Source id="mexico-ports" type="geojson" data={mexicoPortsGeoJSON as any}>
+                        <Layer
+                            id="mexico-ports-layer"
+                            type="circle"
+                            paint={{
+                                'circle-color': ['get', 'color'],
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 4, 6, 7, 10, 10],
+                                'circle-opacity': 0.85,
+                                'circle-stroke-width': 1.5,
+                                'circle-stroke-color': '#bfdbfe',
+                            }}
+                        />
+                        <Layer
+                            id="mexico-ports-label"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 6, ['get', 'name']],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 10,
+                                'text-offset': [0, 1.4],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#93c5fd',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico Prisons */}
+                {mexicoPrisonsGeoJSON && (
+                    <Source id="mexico-prisons" type="geojson" data={mexicoPrisonsGeoJSON as any}>
+                        <Layer
+                            id="mexico-prisons-layer"
+                            type="circle"
+                            paint={{
+                                'circle-color': ['get', 'color'],
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 4, 6, 7, 10, 10],
+                                'circle-opacity': 0.85,
+                                'circle-stroke-width': 2,
+                                'circle-stroke-color': '#fecaca',
+                            }}
+                        />
+                        <Layer
+                            id="mexico-prisons-label"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 7, ['get', 'name']],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 9,
+                                'text-offset': [0, 1.4],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#fca5a5',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico Dams */}
+                {mexicoDamsGeoJSON && (
+                    <Source id="mexico-dams" type="geojson" data={mexicoDamsGeoJSON as any}>
+                        <Layer
+                            id="mexico-dams-layer"
+                            type="circle"
+                            paint={{
+                                'circle-color': ['get', 'color'],
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 4, 6, 7, 10, 10],
+                                'circle-opacity': 0.85,
+                                'circle-stroke-width': 1.5,
+                                'circle-stroke-color': '#a5f3fc',
+                            }}
+                        />
+                        <Layer
+                            id="mexico-dams-label"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 7, ['get', 'name']],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': 9,
+                                'text-offset': [0, 1.4],
+                                'text-anchor': 'top',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#67e8f9',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1,
+                            }}
+                        />
+                    </Source>
+                )}
+
+                {/* Mexico State News — colored circles + headline labels per state */}
+                {mexicoNewsGeoJSON && (
+                    <Source id="mexico-news" type="geojson" data={mexicoNewsGeoJSON as any}>
+                        {/* Outer glow ring */}
+                        <Layer
+                            id="mexico-news-glow"
+                            type="circle"
+                            paint={{
+                                'circle-color': ['get', 'color'],
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 3, 18, 5, 24, 8, 32],
+                                'circle-opacity': 0.15,
+                                'circle-blur': 0.8,
+                            }}
+                        />
+                        {/* Core dot */}
+                        <Layer
+                            id="mexico-news-layer"
+                            type="circle"
+                            paint={{
+                                'circle-color': ['get', 'color'],
+                                'circle-radius': ['interpolate', ['linear'], ['zoom'], 3, 8, 5, 12, 8, 16],
+                                'circle-opacity': 0.85,
+                                'circle-stroke-width': 2,
+                                'circle-stroke-color': '#ffffff',
+                            }}
+                        />
+                        {/* Article count inside the circle */}
+                        <Layer
+                            id="mexico-news-count"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['get', 'article_count'],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': ['interpolate', ['linear'], ['zoom'], 3, 9, 6, 12],
+                                'text-allow-overlap': true,
+                            }}
+                            paint={{
+                                'text-color': '#000000',
+                            }}
+                        />
+                        {/* State name label */}
+                        <Layer
+                            id="mexico-news-state-label"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['get', 'state_name'],
+                                'text-font': ['Noto Sans Bold'],
+                                'text-size': ['interpolate', ['linear'], ['zoom'], 3, 9, 6, 11, 10, 13],
+                                'text-offset': [0, -2.0],
+                                'text-anchor': 'bottom',
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': '#e2e8f0',
+                                'text-halo-color': 'rgba(0,0,0,0.9)',
+                                'text-halo-width': 1.5,
+                            }}
+                        />
+                        {/* Headline label below */}
+                        <Layer
+                            id="mexico-news-headline"
+                            type="symbol"
+                            layout={{
+                                'text-field': ['step', ['zoom'], '', 5,
+                                    ['concat', ['get', 'top_source'], ': ', ['get', 'top_title']]
+                                ],
+                                'text-font': ['Noto Sans Regular'],
+                                'text-size': ['interpolate', ['linear'], ['zoom'], 5, 9, 8, 11],
+                                'text-offset': [0, 1.8],
+                                'text-anchor': 'top',
+                                'text-max-width': 20,
+                                'text-allow-overlap': false,
+                            }}
+                            paint={{
+                                'text-color': ['get', 'color'],
+                                'text-halo-color': 'rgba(0,0,0,0.85)',
+                                'text-halo-width': 1.2,
+                            }}
+                        />
+                    </Source>
+                )}
+
                 {/* Satellite positions — mission-type icons */}
                 {/* satellites: data pushed imperatively */}
                     <Source id="satellites" type="geojson" data={EMPTY_FC as any}>
@@ -2215,6 +2744,75 @@ const MaplibreViewer = ({ data, activeLayers, onEntityClick, flyToLocation, sele
                                 </div>
                             </Popup>
                         );
+                })()}
+
+                {/* Mexico State News click popup — shows articles for clicked state */}
+                {selectedEntity?.type === 'mexico_news' && (() => {
+                    const stateCode = selectedEntity.extra?.state_code;
+                    const stateData = data?.mexico_news?.find((s: any) => s.state_code === stateCode);
+                    if (!stateData) return null;
+                    const riskColor = stateData.max_risk >= 7 ? '#ef4444' :
+                                      stateData.max_risk >= 5 ? '#f97316' :
+                                      stateData.max_risk >= 3 ? '#eab308' : '#22c55e';
+                    return (
+                        <Popup
+                            longitude={stateData.lng} latitude={stateData.lat}
+                            closeButton={false} closeOnClick={false}
+                            onClose={() => onEntityClick?.(null)}
+                            anchor="bottom" offset={16}
+                            maxWidth="380px"
+                        >
+                            <div className="map-popup border" style={{ borderColor: `${riskColor}50`, maxHeight: '400px', overflow: 'hidden' }}>
+                                <div className="flex justify-between items-center mb-1.5">
+                                    <div className="map-popup-title" style={{ color: riskColor }}>
+                                        {stateData.state_name}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[9px] tracking-wider px-1.5 py-0.5 rounded" style={{
+                                            backgroundColor: `${riskColor}20`, color: riskColor, border: `1px solid ${riskColor}40`
+                                        }}>
+                                            RISK {stateData.max_risk}/10
+                                        </span>
+                                        <button onClick={() => onEntityClick?.(null)} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">✕</button>
+                                    </div>
+                                </div>
+                                <div className="map-popup-subtitle text-[#8899aa] border-b border-[var(--border-primary)]/30 pb-1.5 mb-1.5">
+                                    {stateData.article_count} articles from {new Set(stateData.articles?.map((a: any) => a.source)).size} sources
+                                </div>
+                                <div style={{ maxHeight: '300px', overflowY: 'auto' }} className="space-y-1.5 pr-1 scrollbar-thin">
+                                    {stateData.articles?.slice(0, 8).map((article: any, i: number) => {
+                                        const artRiskColor = article.risk_score >= 7 ? '#ef4444' :
+                                                             article.risk_score >= 5 ? '#f97316' :
+                                                             article.risk_score >= 3 ? '#eab308' : '#8899aa';
+                                        return (
+                                            <div key={article.id || i} className="group">
+                                                <a
+                                                    href={article.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="block p-1.5 rounded hover:bg-white/5 transition-colors"
+                                                    style={{ borderLeft: `2px solid ${artRiskColor}` }}
+                                                >
+                                                    <div className="text-[10px] text-[var(--text-primary)] leading-tight font-medium group-hover:text-[#00e5ff]">
+                                                        {article.title}
+                                                    </div>
+                                                    <div className="flex items-center gap-2 mt-0.5">
+                                                        <span className="text-[8px] text-[#8899aa]">{article.source}</span>
+                                                        <span className="text-[8px]" style={{ color: artRiskColor }}>RISK {article.risk_score}</span>
+                                                        {article.published && (
+                                                            <span className="text-[8px] text-[#556677]">
+                                                                {(() => { try { const d = new Date(article.published); return d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }); } catch { return ''; } })()}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </Popup>
+                    );
                 })()}
 
                 {/* REGION DOSSIER — location pin on map (full intel shown in right panel) */}

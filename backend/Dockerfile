@@ -22,6 +22,13 @@ RUN npm ci --omit=dev
 # Copy source code
 COPY . .
 
+# Keep a pristine copy of data/ so the entrypoint can seed the volume
+RUN cp -r /app/data /app/data_seed
+
+# Copy and set entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 # Create a non-root user for security
 # Grant write access to /app so the auto-updater can extract files
 RUN adduser --system --uid 1001 backenduser \
@@ -33,6 +40,9 @@ USER backenduser
 
 # Expose port
 EXPOSE 8000
+
+# Entrypoint seeds static data files into the persistent volume
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Start FastAPI server
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

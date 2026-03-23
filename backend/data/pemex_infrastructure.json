@@ -1,0 +1,32 @@
+[
+  {"name": "Refinería Ing. Antonio M. Amor (Salamanca)", "type": "refinery", "state": "Guanajuato", "capacity_bpd": 220000, "lat": 20.574, "lng": -101.196},
+  {"name": "Refinería Miguel Hidalgo (Tula)", "type": "refinery", "state": "Hidalgo", "capacity_bpd": 315000, "lat": 20.054, "lng": -99.354},
+  {"name": "Refinería Héctor R. Lara Sosa (Cadereyta)", "type": "refinery", "state": "Nuevo León", "capacity_bpd": 275000, "lat": 25.583, "lng": -99.977},
+  {"name": "Refinería Ing. Antonio Dovalí Jaime (Salina Cruz)", "type": "refinery", "state": "Oaxaca", "capacity_bpd": 330000, "lat": 16.167, "lng": -95.200},
+  {"name": "Refinería Lázaro Cárdenas (Minatitlán)", "type": "refinery", "state": "Veracruz", "capacity_bpd": 185000, "lat": 17.993, "lng": -94.546},
+  {"name": "Refinería Francisco I. Madero (Ciudad Madero)", "type": "refinery", "state": "Tamaulipas", "capacity_bpd": 190000, "lat": 22.270, "lng": -97.836},
+  {"name": "Refinería Olmeca (Dos Bocas)", "type": "refinery", "state": "Tabasco", "capacity_bpd": 340000, "lat": 18.438, "lng": -93.193},
+
+  {"name": "Complejo Petroquímico Cangrejera", "type": "petrochemical", "state": "Veracruz", "capacity_bpd": null, "lat": 18.106, "lng": -94.319},
+  {"name": "Complejo Petroquímico Morelos", "type": "petrochemical", "state": "Veracruz", "capacity_bpd": null, "lat": 18.012, "lng": -94.502},
+  {"name": "Complejo Petroquímico Pajaritos", "type": "petrochemical", "state": "Veracruz", "capacity_bpd": null, "lat": 18.131, "lng": -94.332},
+  {"name": "Complejo Petroquímico Cosoleacaque", "type": "petrochemical", "state": "Veracruz", "capacity_bpd": null, "lat": 17.983, "lng": -94.619},
+  {"name": "Complejo Procesador de Gas Nuevo Pemex", "type": "gas_processing", "state": "Tabasco", "capacity_bpd": null, "lat": 17.953, "lng": -92.896},
+  {"name": "Complejo Procesador de Gas Cactus", "type": "gas_processing", "state": "Chiapas", "capacity_bpd": null, "lat": 17.249, "lng": -93.550},
+  {"name": "Complejo Procesador de Gas Ciudad Pemex", "type": "gas_processing", "state": "Tabasco", "capacity_bpd": null, "lat": 17.835, "lng": -92.492},
+
+  {"name": "Terminal Marítima Dos Bocas", "type": "terminal", "state": "Tabasco", "capacity_bpd": null, "lat": 18.434, "lng": -93.188},
+  {"name": "Terminal Marítima Pajaritos", "type": "terminal", "state": "Veracruz", "capacity_bpd": null, "lat": 18.131, "lng": -94.327},
+  {"name": "Terminal Marítima Salina Cruz", "type": "terminal", "state": "Oaxaca", "capacity_bpd": null, "lat": 16.166, "lng": -95.197},
+  {"name": "Terminal Marítima Tuxpan", "type": "terminal", "state": "Veracruz", "capacity_bpd": null, "lat": 21.010, "lng": -97.331},
+  {"name": "Terminal Marítima Madero", "type": "terminal", "state": "Tamaulipas", "capacity_bpd": null, "lat": 22.265, "lng": -97.823},
+  {"name": "Terminal Marítima Cayo Arcas", "type": "terminal", "state": "Campeche (offshore)", "capacity_bpd": null, "lat": 20.212, "lng": -91.983},
+  {"name": "Terminal Marítima Lázaro Cárdenas", "type": "terminal", "state": "Michoacán", "capacity_bpd": null, "lat": 17.934, "lng": -102.185},
+
+  {"name": "Plataforma Cantarell (Akal-C)", "type": "offshore_platform", "state": "Campeche (offshore)", "capacity_bpd": null, "lat": 19.780, "lng": -92.020},
+  {"name": "Plataforma Ku-Maloob-Zaap", "type": "offshore_platform", "state": "Campeche (offshore)", "capacity_bpd": null, "lat": 19.600, "lng": -92.350},
+  {"name": "Campo Ixachi", "type": "onshore_field", "state": "Veracruz", "capacity_bpd": null, "lat": 18.350, "lng": -96.650},
+  {"name": "Campo Quesqui", "type": "onshore_field", "state": "Tabasco", "capacity_bpd": null, "lat": 17.700, "lng": -92.800},
+
+  {"name": "Centro Administrativo PEMEX (Torre PEMEX)", "type": "headquarters", "state": "CDMX", "capacity_bpd": null, "lat": 19.455, "lng": -99.153}
+]

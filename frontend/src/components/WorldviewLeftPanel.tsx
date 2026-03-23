@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plane, AlertTriangle, Activity, Satellite, Cctv, ChevronDown, ChevronUp, Ship, Eye, Anchor, Settings, Sun, Moon, BookOpen, Radio, Play, Pause, Globe, Flame, Wifi, Server, Shield, Zap, ToggleLeft, ToggleRight, Palette } from "lucide-react";
+import { Plane, AlertTriangle, Activity, Satellite, Cctv, ChevronDown, ChevronUp, Ship, Eye, Anchor, Settings, Sun, Moon, BookOpen, Radio, Play, Pause, Globe, Flame, Wifi, Server, Shield, Zap, ToggleLeft, ToggleRight, Palette, Mountain, Fuel, MapPin, Building2, Droplets, Lock, Newspaper } from "lucide-react";
 import packageJson from "../../package.json";
 import { useTheme } from "@/lib/ThemeContext";
 
@@ -42,6 +42,17 @@ const FRESHNESS_MAP: Record<string, string> = {
     internet_outages: "internet_outages",
     datacenters: "datacenters",
     power_plants: "power_plants",
+    pemex: "pemex_infrastructure",
+    mexico_volcanoes: "mexico_volcanoes",
+    mexico_earthquakes: "mexico_earthquakes",
+    mexico_weather_alerts: "mexico_weather_alerts",
+    mexico_incidents: "gdelt",
+    mexico_news: "mexico_news",
+    mexico_airports: "mexico_airports",
+    mexico_border_crossings: "mexico_border_crossings",
+    mexico_ports: "mexico_ports",
+    mexico_prisons: "mexico_prisons",
+    mexico_dams: "mexico_dams",
 };
 
 // POTUS fleet ICAO hex codes for client-side filtering
@@ -150,6 +161,17 @@ const WorldviewLeftPanel = React.memo(function WorldviewLeftPanel({ data, active
         { id: "datacenters", name: "Data Centers", source: "DC Map (GitHub)", count: data?.datacenters?.length || 0, icon: Server },
         { id: "power_plants", name: "Power Plants", source: "WRI (Static)", count: data?.power_plants?.length || 0, icon: Zap },
         { id: "military_bases", name: "Military Bases", source: "OSINT (Static)", count: data?.military_bases?.length || 0, icon: Shield },
+        { id: "pemex", name: "PEMEX Infrastructure", source: "PEMEX (Static)", count: data?.pemex_infrastructure?.length || 0, icon: Fuel },
+        { id: "mexico_volcanoes", name: "Mexico Volcanoes", source: "CENAPRED (Static)", count: data?.mexico_volcanoes?.length || 0, icon: Mountain },
+        { id: "mexico_earthquakes", name: "Mexico Earthquakes", source: "USGS + SSN", count: data?.mexico_earthquakes?.length || 0, icon: AlertTriangle },
+        { id: "mexico_weather_alerts", name: "Mexico Weather Alerts", source: "CONAGUA SMN", count: data?.mexico_weather_alerts?.length || 0, icon: AlertTriangle },
+        { id: "mexico_incidents", name: "Mexico Incidents", source: "GDELT (filtered)", count: null, icon: Activity },
+        { id: "mexico_news", name: "Mexico State News", source: "40+ RSS Feeds", count: data?.mexico_news?.reduce((a: number, s: any) => a + (s.article_count || 0), 0) || 0, icon: Newspaper },
+        { id: "mexico_airports", name: "Mexico Airports", source: "OSINT (Static)", count: data?.mexico_airports?.length || 0, icon: Plane },
+        { id: "mexico_border_crossings", name: "Border Crossings", source: "OSINT (Static)", count: data?.mexico_border_crossings?.length || 0, icon: MapPin },
+        { id: "mexico_ports", name: "Mexico Ports", source: "OSINT (Static)", count: data?.mexico_ports?.length || 0, icon: Anchor },
+        { id: "mexico_prisons", name: "Mexico Prisons", source: "OSINT (Static)", count: data?.mexico_prisons?.length || 0, icon: Lock },
+        { id: "mexico_dams", name: "Dams & Hydroelectric", source: "OSINT (Static)", count: data?.mexico_dams?.length || 0, icon: Droplets },
         { id: "day_night", name: "Day / Night Cycle", source: "Solar Calc", count: null, icon: Sun },
     ];
 

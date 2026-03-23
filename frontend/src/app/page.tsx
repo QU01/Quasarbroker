@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import WorldviewLeftPanel from "@/components/WorldviewLeftPanel";
+import QuasarLogo from "@/QUASAR.svg";
 
 import NewsFeed from "@/components/NewsFeed";
 import MarketsPanel from "@/components/MarketsPanel";
@@ -13,6 +14,8 @@ import FindLocateBar from "@/components/FindLocateBar";
 import TopRightControls from "@/components/TopRightControls";
 import RadioInterceptPanel from "@/components/RadioInterceptPanel";
 import SettingsPanel from "@/components/SettingsPanel";
+import PersonLookupPanel from "@/components/PersonLookupPanel";
+import InvestigationPanel from "@/components/InvestigationPanel";
 import MapLegend from "@/components/MapLegend";
 import ScaleBar from "@/components/ScaleBar";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -134,6 +137,8 @@ export default function Dashboard() {
   const [rightOpen, setRightOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [legendOpen, setLegendOpen] = useState(false);
+  const [personLookupOpen, setPersonLookupOpen] = useState(false);
+  const [investigationOpen, setInvestigationOpen] = useState(false);
   const [mapView, setMapView] = useState({ zoom: 2, latitude: 20 });
   const [measureMode, setMeasureMode] = useState(false);
   const [measurePoints, setMeasurePoints] = useState<{ lat: number; lng: number }[]>([]);
@@ -164,6 +169,17 @@ export default function Dashboard() {
     datacenters: false,
     military_bases: false,
     power_plants: false,
+    pemex: false,
+    mexico_volcanoes: false,
+    mexico_earthquakes: false,
+    mexico_weather_alerts: false,
+    mexico_incidents: false,
+    mexico_news: false,
+    mexico_airports: false,
+    mexico_border_crossings: false,
+    mexico_ports: false,
+    mexico_prisons: false,
+    mexico_dams: false,
   });
 
   // NASA GIBS satellite imagery state
@@ -246,17 +262,12 @@ export default function Dashboard() {
             transition={{ duration: 1 }}
             className="absolute top-6 left-6 z-[200] pointer-events-none flex items-center gap-4 hud-zone"
           >
-            <div className="w-8 h-8 flex items-center justify-center">
-              {/* Target Reticle Icon */}
-              <div className="w-6 h-6 rounded-full border border-cyan-500 relative flex items-center justify-center">
-                <div className="w-4 h-4 rounded-full bg-cyan-500/30"></div>
-                <div className="absolute top-[-2px] bottom-[-2px] w-[1px] bg-cyan-500"></div>
-                <div className="absolute left-[-2px] right-[-2px] h-[1px] bg-cyan-500"></div>
-              </div>
+            <div className="w-12 h-12 flex items-center justify-center">
+              <img src={QuasarLogo.src || QuasarLogo} alt="QuasarBroker Logo" className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(0,255,255,0.6)]" />
             </div>
             <div className="flex flex-col">
               <h1 className="text-2xl font-bold tracking-[0.4em] text-[var(--text-primary)] flex items-center gap-3" style={{ fontFamily: 'monospace' }}>
-                S H A D O W <span className="text-cyan-400">B R O K E R</span>
+                Quasar<span className="text-cyan-400">Broker</span>
               </h1>
               <span className="text-[9px] text-[var(--text-muted)] font-mono tracking-[0.3em] mt-1 ml-1">GLOBAL THREAT INTERCEPT</span>
             </div>
@@ -385,8 +396,32 @@ export default function Dashboard() {
             transition={{ delay: 1, duration: 1 }}
             className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[200] pointer-events-auto flex flex-col items-center gap-2 hud-zone"
           >
-            {/* LOCATE BAR — search by coordinates or place name */}
-            <LocateBar onLocate={(lat, lng) => setFlyToLocation({ lat, lng, ts: Date.now() })} />
+            {/* LOCATE BAR & PERSON LOOKUP — search tools */}
+            <div className="flex items-center gap-2">
+              <LocateBar onLocate={(lat, lng) => setFlyToLocation({ lat, lng, ts: Date.now() })} />
+              <button
+                onClick={() => setPersonLookupOpen(!personLookupOpen)}
+                className={`flex items-center gap-1.5 backdrop-blur-md border rounded-lg px-3 py-1.5 text-[9px] font-mono tracking-[0.15em] transition-colors ${
+                  personLookupOpen
+                    ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-300"
+                    : "bg-[var(--bg-primary)]/60 border-[var(--border-primary)] text-[var(--text-muted)] hover:text-cyan-400 hover:border-cyan-800"
+                }`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+                OSINT
+              </button>
+              <button
+                onClick={() => setInvestigationOpen(!investigationOpen)}
+                className={`flex items-center gap-1.5 backdrop-blur-md border rounded-lg px-3 py-1.5 text-[9px] font-mono tracking-[0.15em] transition-colors ${
+                  investigationOpen
+                    ? "bg-purple-500/20 border-purple-500/50 text-purple-300"
+                    : "bg-[var(--bg-primary)]/60 border-[var(--border-primary)] text-[var(--text-muted)] hover:text-purple-400 hover:border-purple-800"
+                }`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg>
+                AGENT
+              </button>
+            </div>
 
             <div
               className="bg-[var(--bg-primary)]/60 backdrop-blur-md border border-[var(--border-primary)] rounded-xl px-6 py-2.5 flex items-center gap-6 shadow-[0_4px_30px_rgba(0,0,0,0.2)] border-b-2 border-b-cyan-900"
@@ -476,6 +511,16 @@ export default function Dashboard() {
       {/* SETTINGS PANEL */}
       <ErrorBoundary name="SettingsPanel">
         <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      </ErrorBoundary>
+
+      {/* PERSON LOOKUP PANEL */}
+      <ErrorBoundary name="PersonLookupPanel">
+        <PersonLookupPanel isOpen={personLookupOpen} onClose={() => setPersonLookupOpen(false)} />
+      </ErrorBoundary>
+
+      {/* OSINT INVESTIGATION AGENT */}
+      <ErrorBoundary name="InvestigationPanel">
+        <InvestigationPanel isOpen={investigationOpen} onClose={() => setInvestigationOpen(false)} />
       </ErrorBoundary>
 
       {/* MAP LEGEND */}

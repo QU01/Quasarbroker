@@ -32,7 +32,17 @@ latest_data = {
     "firms_fires": [],
     "datacenters": [],
     "military_bases": [],
-    "power_plants": []
+    "power_plants": [],
+    "pemex_infrastructure": [],
+    "mexico_volcanoes": [],
+    "mexico_earthquakes": [],
+    "mexico_weather_alerts": [],
+    "mexico_airports": [],
+    "mexico_border_crossings": [],
+    "mexico_ports": [],
+    "mexico_prisons": [],
+    "mexico_dams": [],
+    "mexico_news": [],
 }
 
 # Per-source freshness timestamps

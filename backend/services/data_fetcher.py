@@ -37,16 +37,20 @@ from services.fetchers.news import fetch_news  # noqa: F401
 # Newly extracted fetcher modules
 from services.fetchers.financial import fetch_defense_stocks, fetch_oil_prices  # noqa: F401
 from services.fetchers.earth_observation import (  # noqa: F401
-    fetch_earthquakes, fetch_firms_fires, fetch_space_weather, fetch_weather,
+    fetch_earthquakes, fetch_mexico_earthquakes, fetch_firms_fires, fetch_space_weather, fetch_weather,
 )
 from services.fetchers.infrastructure import (  # noqa: F401
     fetch_internet_outages, fetch_datacenters, fetch_military_bases, fetch_power_plants,
-    fetch_cctv, fetch_kiwisdr,
+    fetch_cctv, fetch_kiwisdr, fetch_pemex_infrastructure, fetch_mexico_volcanoes,
+    fetch_mexico_airports, fetch_mexico_border_crossings, fetch_mexico_ports,
+    fetch_mexico_prisons, fetch_mexico_dams,
 )
 from services.fetchers.geo import (  # noqa: F401
     fetch_ships, fetch_airports, find_nearest_airport, cached_airports,
     fetch_frontlines, fetch_gdelt, fetch_geopolitics, update_liveuamap,
 )
+from services.fetchers.mexico import fetch_conagua_alerts, fetch_cenapred_alerts  # noqa: F401
+from services.fetchers.mexico_news import fetch_mexico_news  # noqa: F401
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +92,16 @@ def update_slow_data():
         fetch_datacenters,
         fetch_military_bases,
         fetch_power_plants,
+        fetch_pemex_infrastructure,
+        fetch_mexico_volcanoes,
+        fetch_mexico_earthquakes,
+        fetch_conagua_alerts,
+        fetch_mexico_airports,
+        fetch_mexico_border_crossings,
+        fetch_mexico_ports,
+        fetch_mexico_prisons,
+        fetch_mexico_dams,
+        fetch_mexico_news,
     ]
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(slow_funcs)) as executor:
         futures = [executor.submit(func) for func in slow_funcs]
@@ -120,6 +134,9 @@ def start_scheduler():
     # Very slow — every 15 minutes
     _scheduler.add_job(fetch_gdelt, 'interval', minutes=15, id='gdelt', max_instances=1, misfire_grace_time=120)
     _scheduler.add_job(update_liveuamap, 'interval', minutes=15, id='liveuamap', max_instances=1, misfire_grace_time=120)
+
+    # Very slow — every 30 minutes (CENAPRED volcanic reports are daily)
+    _scheduler.add_job(fetch_cenapred_alerts, 'interval', minutes=30, id='cenapred', max_instances=1, misfire_grace_time=120)
 
     # CCTV pipeline refresh — every 10 minutes
     # Instantiate once and reuse — avoids re-creating DB connections on every tick

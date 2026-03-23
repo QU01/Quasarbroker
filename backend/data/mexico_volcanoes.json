@@ -1,0 +1,17 @@
+[
+  {"name": "Popocatépetl", "lat": 19.023, "lng": -98.622, "elevation_m": 5426, "last_eruption": "2024 (ongoing)", "alert_level": "yellow", "monitoring": "CENAPRED"},
+  {"name": "Volcán de Colima", "lat": 19.514, "lng": -103.620, "elevation_m": 3839, "last_eruption": "2019", "alert_level": "yellow", "monitoring": "CENAPRED"},
+  {"name": "Citlaltépetl (Pico de Orizaba)", "lat": 19.030, "lng": -97.268, "elevation_m": 5636, "last_eruption": "1846", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "Iztaccíhuatl", "lat": 19.179, "lng": -98.642, "elevation_m": 5230, "last_eruption": "Holocene", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "Nevado de Toluca (Xinantécatl)", "lat": 19.108, "lng": -99.758, "elevation_m": 4680, "last_eruption": "~1350 BCE", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "La Malinche (Matlalcuéyetl)", "lat": 19.231, "lng": -98.032, "elevation_m": 4461, "last_eruption": "~3100 BCE", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "Ceboruco", "lat": 21.125, "lng": -104.508, "elevation_m": 2280, "last_eruption": "1875", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "El Chichón", "lat": 17.360, "lng": -93.228, "elevation_m": 1150, "last_eruption": "1982", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "Tacaná", "lat": 15.130, "lng": -92.112, "elevation_m": 4060, "last_eruption": "1986", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "San Martín Tuxtla", "lat": 18.562, "lng": -95.173, "elevation_m": 1650, "last_eruption": "1793", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "Cofre de Perote", "lat": 19.492, "lng": -97.150, "elevation_m": 4282, "last_eruption": "Pleistocene", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "Jocotitlán", "lat": 19.733, "lng": -99.758, "elevation_m": 3900, "last_eruption": "~3600 BCE", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "Paricutín", "lat": 19.493, "lng": -102.251, "elevation_m": 2808, "last_eruption": "1952", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "Volcán de San Juan", "lat": 19.310, "lng": -103.752, "elevation_m": 2680, "last_eruption": "Holocene", "alert_level": "green", "monitoring": "CENAPRED"},
+  {"name": "Tres Vírgenes", "lat": 27.470, "lng": -112.591, "elevation_m": 1940, "last_eruption": "1857", "alert_level": "green", "monitoring": "CENAPRED"}
+]

@@ -4,38 +4,38 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Zap, Ship, Download, Shield, Bug, Heart } from "lucide-react";
 
-const CURRENT_VERSION = "0.9.5";
-const STORAGE_KEY = `shadowbroker_changelog_v${CURRENT_VERSION}`;
+const CURRENT_VERSION = "0.9.6";
+const STORAGE_KEY = `quasarbroker_changelog_v${CURRENT_VERSION}`;
 
 const NEW_FEATURES = [
     {
         icon: <Zap size={14} className="text-cyan-400" />,
-        title: "Parallelized Boot (15s Cold Start)",
-        desc: "Backend startup now runs fast-tier, slow-tier, and airport data concurrently via ThreadPoolExecutor. Boot time cut from 60s+ to ~15s.",
+        title: "Mexico OSINT Features",
+        desc: "Added new sources including SEDENA/SEMAR military bases, PEMEX facilities, CENAPRED volcanoes, and CONAGUA weather alerts.",
         color: "cyan",
     },
     {
         icon: <Shield size={14} className="text-green-400" />,
-        title: "Adaptive Polling + ETag Caching",
-        desc: "Data polling engine rebuilt with adaptive retry (3s startup, 15s steady state) and ETag conditional caching. Map panning no longer interrupts data flow.",
+        title: "AI-Powered OSINT Agents",
+        desc: "Integrated LangChain deepagents for conversational OSINT, allowing queries across 50+ live intelligence sources.",
         color: "green",
     },
     {
         icon: <Ship size={14} className="text-blue-400" />,
-        title: "Sliding Edge Panels (LAYERS / INTEL)",
-        desc: "Replaced bulky Record Panel with spring-animated side tabs. LAYERS on the left, INTEL (News, Markets, Radio, Find) on the right. Premium tactical HUD feel.",
+        title: "Mexico State-by-State News",
+        desc: "Real-time state-by-state news aggregation from 40+ Mexican and global sources with integrated risk scoring.",
         color: "blue",
     },
     {
         icon: <Download size={14} className="text-yellow-400" />,
-        title: "Admin Auth + Rate Limiting + Auto-Updater",
-        desc: "Settings and system endpoints protected by X-Admin-Key. All endpoints rate-limited via slowapi. One-click auto-update from GitHub releases with safe backup/restart.",
+        title: "Advanced Person OSINT Tools",
+        desc: "Added Sherlock integration (150+ sites), email enumeration, WHOIS lookups, GitHub analysis, and HIBP breach checking.",
         color: "yellow",
     },
     {
         icon: <Shield size={14} className="text-purple-400" />,
-        title: "Docker Swarm Secrets Support",
-        desc: "Production deployments can now load API keys from /run/secrets/ instead of environment variables. env_check.py enforces warning tiers for missing keys.",
+        title: "QuasarBroker Branding & Restyling",
+        desc: "Updated the dashboard HUD, onboarding flow, and visual identity to QuasarBroker, complete with our new vector logo.",
         color: "purple",
     },
 ];
@@ -109,7 +109,7 @@ const ChangelogModal = React.memo(function ChangelogModal({ onClose }: Changelog
                                     </h2>
                                 </div>
                                 <p className="text-[9px] text-[var(--text-muted)] font-mono tracking-widest mt-1">
-                                    SHADOWBROKER INTELLIGENCE PLATFORM UPDATE
+                                    QUASARBROKER INTELLIGENCE PLATFORM UPDATE
                                 </p>
                             </div>
                             <button

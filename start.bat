@@ -1,5 +1,5 @@
 @echo off
-title ShadowBroker - Global Threat Intercept
+title QuasarBroker - Global Threat Intercept
 
 echo ===================================================
 echo     S H A D O W B R O K E R   --   STARTUP

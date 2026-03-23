@@ -1,4 +1,4 @@
-// ─── ShadowBroker Frontend Constants ────────────────────────────────────────
+// ─── QuasarBroker Frontend Constants ────────────────────────────────────────
 // Centralized magic numbers. Import from here instead of hardcoding.
 
 // ─── Data Polling ───────────────────────────────────────────────────────────
