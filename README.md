@@ -6,7 +6,7 @@
 
 ## Overview
 
-**QuasarBroker** is an enhanced fork of QuasarBroker that adds comprehensive Mexico-focused OSINT capabilities, advanced AI agent tools powered by LangChain deepagents, and real-time geopolitical intelligence aggregation.
+**QuasarBroker** is an enhanced fork of ShadowBroker that adds comprehensive OSINT capabilities, advanced AI agent tools powered by LangChain deepagents, and real-time geopolitical intelligence aggregation.
 
 ### Key Enhancements
 
@@ -21,7 +21,7 @@
 ### Docker (Recommended)
 
 ```bash
-git clone https://github.com/yourusername/quasarbroker.git
+git clone https://github.com/QU01/Quasarbroker.git
 cd quasarbroker
 
 cp backend/.env.example backend/.env
@@ -140,7 +140,7 @@ quasarbroker/
 
 MIT License — See LICENSE file
 
-**Original Project**: [QuasarBroker](https://github.com/BigBodyCobain/Quasarbroker) by BigBodyCobain
+**Original Project**: [ShadowBroker](https://github.com/BigBodyCobain/Shadowbroker) by BigBodyCobain
 
 **Enhancements**: Mexico OSINT, AI agents, advanced person lookup, state news
 
