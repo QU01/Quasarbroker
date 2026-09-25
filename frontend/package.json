@@ -16,6 +16,7 @@
   "dependencies": {
     "@mapbox/point-geometry": "^1.1.0",
     "framer-motion": "^12.34.3",
+    "globe.gl": "^2.46.2",
     "hls.js": "^1.6.15",
     "lucide-react": "^0.575.0",
     "maplibre-gl": "^4.7.1",

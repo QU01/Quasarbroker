@@ -140,6 +140,9 @@ async def lifespan(app: FastAPI):
     stop_carrier_tracker()
 
 app = FastAPI(title="Live Risk Dashboard API", lifespan=lifespan)
+
+from services.worldsystem import router as worldsystem_router
+app.include_router(worldsystem_router)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 

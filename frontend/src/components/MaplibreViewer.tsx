@@ -59,7 +59,7 @@ import {
     type FlightLayerConfig,
 } from "@/components/map/geoJSONBuilders";
 
-const MaplibreViewer = ({ data, activeLayers, onEntityClick, flyToLocation, selectedEntity, onMouseCoords, onRightClick, regionDossier, regionDossierLoading, onViewStateChange, measureMode, onMeasureClick, measurePoints, gibsDate, gibsOpacity, viewBoundsRef, setTrackedSdr }: MaplibreViewerProps) => {
+const MaplibreViewer = ({ data, activeLayers, onEntityClick, flyToLocation, selectedEntity, onMouseCoords, onRightClick, regionDossier, regionDossierLoading, onViewStateChange, measureMode, onMeasureClick, measurePoints, gibsDate, gibsOpacity, viewBoundsRef, setTrackedSdr, extraLayers }: MaplibreViewerProps) => {
     const mapRef = useRef<MapRef>(null);
     const [mapReady, setMapReady] = useState(false);
     const { theme } = useTheme();
@@ -780,6 +780,9 @@ const MaplibreViewer = ({ data, activeLayers, onEntityClick, flyToLocation, sele
                         />
                     </Source>
                 )}
+
+                {/* World-system model and static OSINT layers (below live entities) */}
+                {extraLayers}
 
                 {/* NASA GIBS MODIS Terra — daily satellite imagery overlay */}
                 {activeLayers.gibs_imagery && gibsDate && (

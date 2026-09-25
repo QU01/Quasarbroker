@@ -73,6 +73,55 @@ ADMIN_KEY=your-secret-key
 - **News**: State-by-state aggregation from 40+ sources
 - **Earthquakes**: USGS + Mexico SSN feeds
 
+## World-System Module (2D map / 3D globe)
+
+The **SISTEMA-MUNDO** button (top center) opens the world-system module, and **MAPA 2D / GLOBO 3D** switches between the MapLibre map and an interactive 3D globe ([globe.gl](https://github.com/vasturiano/globe.gl)). The globe shows the live feeds too: flights, ships and earthquakes.
+
+**Model layer.** It comes from [Reproducible-Research-Project-2](https://github.com/QU01/Reproducible-Research-Project-2), an agent-based model of 180 countries that combines:
+- world-systems theory;
+- structural-demographic theory;
+- Turchin's metaethnic frontier;
+- Hubbert resource depletion;
+- debt, crises and financing;
+- institutions;
+- climate damage.
+
+It is calibrated on 1950–2019 data and validated out of sample at 1, 5 and 10 years.
+
+- **Indicators:** 14 per country (GDP per capita, core/periphery position, political stress index, conflict risk, asabiya, elite capture, net world-system rents, resource rents and reserves, debt, democracy, temperature, climate damage, CO₂).
+- **Scenarios:** observed data, the model replaying history, the forecast from 1990, the projection to 2030, and four reinforcement-learning policies.
+- **Time:** a year slider with playback, 1950–2030.
+- **Countries:** click one to see its **incremental recommendation**, the change in spending by channel relative to the country's estimated decision rule. The panel shows the expected effect on consumption, GDP, debt and conflict, the probability of improvement, and how robust the result is across parameter sets.
+
+**New open OSINT layers:**
+
+| Layer | Source |
+|---|---|
+| Geocoded armed-conflict events, 1989–2023, driven by the year slider | UCDP GED v24.1 |
+| Shipping lanes | Benden 2021, from AIS density |
+| Bilateral trade flows, 1950–2014 | Correlates of War |
+| Global air-route network | OpenFlights |
+| Oil and gas pipelines in operation | Global Energy Monitor |
+| LNG terminals and oil/gas fields | Global Energy Monitor |
+| Reactors under construction or planned | GeoNuclearData |
+| Submarine cables | TeleGeography, CC BY-NC-SA 3.0 |
+| World ports | NGA World Port Index |
+
+**Backend API.**
+- `/api/worldsystem/meta` — countries, scenarios and their variables.
+- `/api/worldsystem/layer?scenario=&var=&year=` — indicator values for all countries.
+- `/api/worldsystem/country/{iso3}` — one country's series and recommendations.
+- `/api/worldsystem/recommendations?mode=bienestar|revelada`
+- `/api/worldsystem/insights` — revealed reward, decision rules and validation.
+- `/api/worldsystem/countries` — country polygons.
+- `/api/worldsystem/osint/{layer}?year=`
+
+**Data.** The data lives in `backend/data/worldsystem/` as gzip JSON, about 3 MB. To refresh it after re-running the model:
+
+```bash
+python backend/scripts/sync_worldsystem.py /path/to/Reproducible-Research-Project-2
+```
+
 ## AI Agent Tools
 
 Access 25+ OSINT tools via conversational interface:

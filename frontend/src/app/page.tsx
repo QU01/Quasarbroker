@@ -30,6 +30,11 @@ import { useRegionDossier } from "@/hooks/useRegionDossier";
 
 // Use dynamic loads for Maplibre to avoid SSR window is not defined errors
 const MaplibreViewer = dynamic(() => import('@/components/MaplibreViewer'), { ssr: false });
+const GlobeViewer = dynamic(() => import('@/components/worldsystem/GlobeViewer'), { ssr: false });
+import WorldSystemMapLayers from "@/components/worldsystem/WorldSystemMapLayers";
+import WorldSystemPanel from "@/components/worldsystem/WorldSystemPanel";
+import { useWorldSystem } from "@/hooks/useWorldSystem";
+import { DEFAULT_WS, type WorldSystemState } from "@/lib/worldsystem";
 
 /* ── LOCATE BAR ── coordinate / place-name search above bottom status bar ── */
 function LocateBar({ onLocate }: { onLocate: (lat: number, lng: number) => void }) {
@@ -194,6 +199,13 @@ export default function Dashboard() {
     bloom: true,
   });
 
+  // World-system module (model layers, static OSINT) and 2D map / 3D globe view
+  const [viewMode, setViewMode] = useState<'map' | 'globe'>('map');
+  const [wsOpen, setWsOpen] = useState(false);
+  const [ws, setWs] = useState<WorldSystemState>(DEFAULT_WS);
+  const wsData = useWorldSystem(ws, wsOpen || viewMode === 'globe' || ws.model || Object.values(ws.osint).some(Boolean));
+  const selectWsCountry = (iso3: string | null) => { setWs((s) => ({ ...s, selected: iso3 })); setWsOpen(true); };
+
   const [activeStyle, setActiveStyle] = useState('DEFAULT');
   const stylesList = ['DEFAULT', 'SATELLITE'];
 
@@ -223,7 +235,16 @@ export default function Dashboard() {
     <DashboardDataProvider data={data} selectedEntity={selectedEntity} setSelectedEntity={setSelectedEntity}>
     <main className="fixed inset-0 w-full h-full bg-[var(--bg-primary)] overflow-hidden font-sans">
 
+      {/* 3D GLOBE VIEW */}
+      {viewMode === 'globe' && (
+        <ErrorBoundary name="Globe">
+          <GlobeViewer data={data} activeLayers={activeLayers} ws={ws} meta={wsData.meta} countries={wsData.countries}
+            values={wsData.values} staticData={wsData.staticData} onSelectCountry={selectWsCountry} flyTo={flyToLocation} />
+        </ErrorBoundary>
+      )}
+
       {/* MAPLIBRE WEBGL OVERLAY */}
+      {viewMode === 'map' && (
       <ErrorBoundary name="Map">
         <MaplibreViewer
           data={data}
@@ -250,8 +271,11 @@ export default function Dashboard() {
           measurePoints={measurePoints}
           trackedSdr={trackedSdr}
           setTrackedSdr={setTrackedSdr}
+          extraLayers={<WorldSystemMapLayers ws={ws} meta={wsData.meta} countries={wsData.countries} values={wsData.values}
+            staticData={wsData.staticData} onSelectCountry={selectWsCountry} />}
         />
       </ErrorBoundary>
+      )}
 
       {uiVisible && (
         <>
@@ -283,6 +307,31 @@ export default function Dashboard() {
             <div>RTX</div>
             <div>VSR</div>
           </div>
+
+          {/* VIEW SELECTOR: 2D map / 3D globe + world-system module */}
+          <div className="absolute top-6 left-1/2 -translate-x-1/2 z-[210] flex items-center gap-1 bg-[var(--bg-primary)]/70 backdrop-blur-md border border-[var(--border-primary)] rounded-lg p-1 hud-zone">
+            {([['map', 'MAPA 2D'], ['globe', 'GLOBO 3D']] as const).map(([mode, text]) => (
+              <button key={mode} onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode}
+                className={`px-3 py-1.5 rounded text-[9px] font-mono tracking-[0.15em] transition-colors ${viewMode === mode ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-700/60' : 'text-[var(--text-muted)] hover:text-cyan-300 border border-transparent'}`}>
+                {text}
+              </button>
+            ))}
+            <span className="w-px h-4 bg-[var(--border-primary)] mx-1" />
+            <button onClick={() => setWsOpen((o) => !o)} aria-pressed={wsOpen}
+              className={`px-3 py-1.5 rounded text-[9px] font-mono tracking-[0.15em] transition-colors ${wsOpen ? 'bg-amber-500/15 text-amber-300 border border-amber-700/60' : 'text-[var(--text-muted)] hover:text-amber-300 border border-transparent'}`}>
+              SISTEMA-MUNDO
+            </button>
+          </div>
+
+          {/* WORLD-SYSTEM PANEL */}
+          {wsOpen && (
+            <div className="absolute top-20 left-1/2 -translate-x-1/2 z-[205] hud-zone">
+              <ErrorBoundary name="WorldSystemPanel">
+                <WorldSystemPanel ws={ws} setWs={setWs} meta={wsData.meta} values={wsData.values} recs={wsData.recs}
+                  error={wsData.error} onClose={() => setWsOpen(false)} />
+              </ErrorBoundary>
+            </div>
+          )}
 
           {/* LEFT HUD CONTAINER — slides off left edge when hidden */}
           <motion.div
